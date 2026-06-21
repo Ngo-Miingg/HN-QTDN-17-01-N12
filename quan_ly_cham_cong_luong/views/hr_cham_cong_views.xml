@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_cham_cong_tree" model="ir.ui.view">
+        <field name="name">hr_cham_cong.tree</field>
+        <field name="model">hr_cham_cong</field>
+        <field name="arch" type="xml">
+            <tree string="Cham cong">
+                <field name="ngay_cham_cong"/>
+                <field name="nhan_vien_id"/>
+                <field name="trang_thai"/>
+                <field name="so_gio_tang_ca"/>
+                <field name="nguoi_xac_nhan"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_cham_cong_form" model="ir.ui.view">
+        <field name="name">hr_cham_cong.form</field>
+        <field name="model">hr_cham_cong</field>
+        <field name="arch" type="xml">
+            <form string="Cham cong">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="nhan_vien_id"/>
+                            <field name="ngay_cham_cong"/>
+                        </group>
+                        <group>
+                            <field name="trang_thai"/>
+                            <field name="so_gio_tang_ca"/>
+                            <field name="nguoi_xac_nhan"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_cham_cong_search" model="ir.ui.view">
+        <field name="name">hr_cham_cong.search</field>
+        <field name="model">hr_cham_cong</field>
+        <field name="arch" type="xml">
+            <search string="Tim cham cong">
+                <field name="nhan_vien_id"/>
+                <field name="ngay_cham_cong"/>
+                <filter string="Di lam du ngay" name="filter_di_lam" domain="[('trang_thai','=','di_lam')]"/>
+                <filter string="Nua ngay" name="filter_nua_ngay" domain="[('trang_thai','=','nua_ngay')]"/>
+                <group expand="0" string="Nhom theo">
+                    <filter string="Nhan vien" name="group_nhan_vien" context="{'group_by': 'nhan_vien_id'}"/>
+                    <filter string="Ngay" name="group_ngay" context="{'group_by': 'ngay_cham_cong'}"/>
+                    <filter string="Trang thai" name="group_trang_thai" context="{'group_by': 'trang_thai'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_cham_cong" model="ir.actions.act_window">
+        <field name="name">Cham cong</field>
+        <field name="res_model">hr_cham_cong</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_hr_cham_cong_search"/>
+    </record>
+</odoo>

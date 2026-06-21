@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_khen_thuong_ky_luat_tree" model="ir.ui.view">
+        <field name="name">hr_khen_thuong_ky_luat.tree</field>
+        <field name="model">hr_khen_thuong_ky_luat</field>
+        <field name="arch" type="xml">
+            <tree string="Khen thuong ky luat">
+                <field name="ngay_ap_dung"/>
+                <field name="nhan_vien_id"/>
+                <field name="loai_quyet_dinh"/>
+                <field name="so_tien"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_khen_thuong_ky_luat_form" model="ir.ui.view">
+        <field name="name">hr_khen_thuong_ky_luat.form</field>
+        <field name="model">hr_khen_thuong_ky_luat</field>
+        <field name="arch" type="xml">
+            <form string="Khen thuong ky luat">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="nhan_vien_id"/>
+                            <field name="loai_quyet_dinh"/>
+                        </group>
+                        <group>
+                            <field name="so_tien"/>
+                            <field name="ngay_ap_dung"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Ghi chu">
+                            <field name="ghi_chu"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_khen_thuong_ky_luat_search" model="ir.ui.view">
+        <field name="name">hr_khen_thuong_ky_luat.search</field>
+        <field name="model">hr_khen_thuong_ky_luat</field>
+        <field name="arch" type="xml">
+            <search string="Tim khen thuong ky luat">
+                <field name="nhan_vien_id"/>
+                <field name="ngay_ap_dung"/>
+                <filter string="Khen thuong" name="filter_khen_thuong" domain="[('loai_quyet_dinh','=','khen_thuong')]"/>
+                <filter string="Ky luat" name="filter_ky_luat" domain="[('loai_quyet_dinh','=','ky_luat')]"/>
+                <group expand="0" string="Nhom theo">
+                    <filter string="Nhan vien" name="group_nhan_vien" context="{'group_by': 'nhan_vien_id'}"/>
+                    <filter string="Loai quyet dinh" name="group_loai" context="{'group_by': 'loai_quyet_dinh'}"/>
+                    <filter string="Ngay ap dung" name="group_ngay" context="{'group_by': 'ngay_ap_dung'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_khen_thuong_ky_luat" model="ir.actions.act_window">
+        <field name="name">Khen thuong ky luat</field>
+        <field name="res_model">hr_khen_thuong_ky_luat</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_hr_khen_thuong_ky_luat_search"/>
+    </record>
+</odoo>

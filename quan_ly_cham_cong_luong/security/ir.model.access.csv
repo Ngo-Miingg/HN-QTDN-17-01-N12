@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_luong_co_ban_user,hr_luong_co_ban_user,model_hr_luong_co_ban,base.group_user,1,1,1,1
+access_hr_cham_cong_user,hr_cham_cong_user,model_hr_cham_cong,base.group_user,1,1,1,1
+access_hr_khen_thuong_ky_luat_user,hr_khen_thuong_ky_luat_user,model_hr_khen_thuong_ky_luat,base.group_user,1,1,1,1
+access_hr_phieu_luong_user,hr_phieu_luong_user,model_hr_phieu_luong,base.group_user,1,1,1,1

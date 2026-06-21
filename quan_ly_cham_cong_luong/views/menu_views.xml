@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_quan_ly_cham_cong_luong_root"
+        name="Cham cong - Luong"
+        sequence="20"/>
+
+    <menuitem
+        id="menu_hr_luong_co_ban"
+        name="Luong co ban"
+        parent="menu_quan_ly_cham_cong_luong_root"
+        action="action_hr_luong_co_ban"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_hr_cham_cong"
+        name="Cham cong"
+        parent="menu_quan_ly_cham_cong_luong_root"
+        action="action_hr_cham_cong"
+        sequence="20"/>
+
+    <menuitem
+        id="menu_hr_khen_thuong_ky_luat"
+        name="Khen thuong ky luat"
+        parent="menu_quan_ly_cham_cong_luong_root"
+        action="action_hr_khen_thuong_ky_luat"
+        sequence="30"/>
+
+    <menuitem
+        id="menu_hr_phieu_luong"
+        name="Phieu luong"
+        parent="menu_quan_ly_cham_cong_luong_root"
+        action="action_hr_phieu_luong"
+        sequence="40"/>
+</odoo>
