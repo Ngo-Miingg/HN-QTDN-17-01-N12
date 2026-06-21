@@ -15,6 +15,27 @@ Module Odoo `quan_ly_cham_cong_luong` cho bai tap lab. Module nay dung du lieu n
 2. Dam bao module `nhan_su` da co san va duoc cai dat.
 3. Cap nhat danh sach module va cai dat `quan_ly_cham_cong_luong`.
 
+## Cac buoc tiep theo
+
+1. Mo Odoo va dang nhap tai khoan quan tri.
+2. Vao `Apps`, chon `Update Apps List` neu chua thay module.
+3. Tim `Quan ly cham cong va luong` va bam `Install`.
+4. Tao du lieu mau cho `Luong co ban`, `Cham cong`, `Khen thuong/Ky luat`.
+5. Mo `Phieu luong` de kiem tra cong thuc tinh luong tu dong.
+6. Chup man hinh ket qua va them vao bao cao/slide nop bai.
+
 ## Cong thuc tinh luong
 
 `Thuc linh = (Luong co ban / 26) * So ngay cong + Phu cap + Khen thuong - Ky luat`
+
+## Anh minh hoa
+
+![Anh 1](img/img.png)
+
+![Anh 2](img/img1.png)
+
+![Anh 3](img/screenshot_1782057705.png)
+
+![Anh 4](img/screenshot_1782057746.png)
+
+![Anh 5](img/screenshot_1782057889.png)
