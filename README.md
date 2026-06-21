@@ -1,41 +1,62 @@
-# Bai tap lab: Quan ly cham cong va luong
+# Bài tập Lab: Quản lý chấm công và lương
 
-Module Odoo `quan_ly_cham_cong_luong` cho bai tap lab. Module nay dung du lieu nhan vien tu module `nhan_su` o bai toan truoc do.
+Đây là bài lab Odoo xây dựng module `quan_ly_cham_cong_luong` để quản lý chấm công, khen thưởng/kỷ luật và tính phiếu lương tháng. Dữ liệu nhân viên được kế thừa từ module `nhan_su` đã làm ở bài trước.
 
-## Chuc nang
+## Mục tiêu
 
-- Cau hinh luong co ban theo nhan vien
-- Cham cong theo ngay
-- Khen thuong va ky luat
-- Phieu luong thang tu dong tinh
+- Quản lý dữ liệu lương cơ bản theo nhân viên
+- Ghi nhận chấm công theo ngày
+- Ghi nhận khen thưởng và kỷ luật trong tháng
+- Tự động tính phiếu lương tháng từ các dữ liệu đầu vào
 
-## Cai dat
+## Cấu trúc chính
 
-1. Copy thu muc `quan_ly_cham_cong_luong` vao duong dan addons cua Odoo, hoac them `BaiTapLab` vao `addons_path`.
-2. Dam bao module `nhan_su` da co san va duoc cai dat.
-3. Cap nhat danh sach module va cai dat `quan_ly_cham_cong_luong`.
+- `quan_ly_cham_cong_luong/models/`
+  - `hr_luong_co_ban.py`
+  - `hr_cham_cong.py`
+  - `hr_khen_thuong_ky_luat.py`
+  - `hr_phieu_luong.py`
+- `quan_ly_cham_cong_luong/views/`
+  - các file XML cho menu, form, tree và action
+- `quan_ly_cham_cong_luong/security/ir.model.access.csv`
+  - cấu hình quyền truy cập model
+- `img/`
+  - ảnh minh họa giao diện và kết quả kiểm thử
 
-## Cac buoc tiep theo
+## Cài đặt và chạy
 
-1. Mo Odoo va dang nhap tai khoan quan tri.
-2. Vao `Apps`, chon `Update Apps List` neu chua thay module.
-3. Tim `Quan ly cham cong va luong` va bam `Install`.
-4. Tao du lieu mau cho `Luong co ban`, `Cham cong`, `Khen thuong/Ky luat`.
-5. Mo `Phieu luong` de kiem tra cong thuc tinh luong tu dong.
-6. Chup man hinh ket qua va them vao bao cao/slide nop bai.
+1. Chép thư mục `quan_ly_cham_cong_luong` vào `addons_path` của Odoo, hoặc thêm toàn bộ thư mục `BaiTapLab` vào `addons_path`.
+2. Bảo đảm module `nhan_su` đã tồn tại và đã được cài đặt.
+3. Khởi động Odoo, cập nhật danh sách ứng dụng, rồi cài module `Quan ly cham cong va luong`.
+4. Tạo dữ liệu mẫu cho nhân viên, lương cơ bản, chấm công, khen thưởng/kỷ luật.
+5. Mở `Phieu luong` để kiểm tra công thức tính tự động.
 
-## Cong thuc tinh luong
+## Công thức tính lương
 
-`Thuc linh = (Luong co ban / 26) * So ngay cong + Phu cap + Khen thuong - Ky luat`
+```text
+Thực lĩnh = (Lương cơ bản / 26) * Số ngày công + Phụ cấp + Khen thưởng - Kỷ luật
+```
 
-## Anh minh hoa
+## Gợi ý sử dụng
 
-![Anh 1 - Nhan vien](img/screenshot_1782061466.png)
+- Nhập dữ liệu nhân viên trước
+- Thiết lập lương cơ bản theo từng nhân viên
+- Cập nhật chấm công theo tháng
+- Ghi nhận các quyết định khen thưởng hoặc kỷ luật phát sinh trong tháng
+- Sinh phiếu lương để kiểm tra kết quả
 
-![Anh 2 - Luong co ban](img/screenshot_1782061369.png)
+## Ảnh minh họa
 
-![Anh 3 - Cham cong](img/screenshot_1782061385.png)
+![Nhân viên](img/screenshot_1782061466.png)
 
-![Anh 4 - Khen thuong ky luat](img/screenshot_1782061420.png)
+![Lương cơ bản](img/screenshot_1782061369.png)
 
-![Anh 5 - Phieu luong](img/screenshot_1782061442.png)
+![Chấm công](img/screenshot_1782061385.png)
+
+![Khen thưởng / kỷ luật](img/screenshot_1782061420.png)
+
+![Phiếu lương](img/screenshot_1782061442.png)
+
+## Ghi chú
+
+Repository này được chuẩn bị để nộp bài lab và có thể tiếp tục phát triển thêm nếu cần mở rộng chức năng hoặc tích hợp các phần nâng cao khác.
