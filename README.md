@@ -30,12 +30,12 @@ Module Odoo `quan_ly_cham_cong_luong` cho bai tap lab. Module nay dung du lieu n
 
 ## Anh minh hoa
 
-![Anh 1](img/img.png)
+![Anh 1 - Nhan vien](img/screenshot_1782061466.png)
 
-![Anh 2](img/img1.png)
+![Anh 2 - Luong co ban](img/screenshot_1782061369.png)
 
-![Anh 3](img/screenshot_1782057705.png)
+![Anh 3 - Cham cong](img/screenshot_1782061385.png)
 
-![Anh 4](img/screenshot_1782057746.png)
+![Anh 4 - Khen thuong ky luat](img/screenshot_1782061420.png)
 
-![Anh 5](img/screenshot_1782057889.png)
+![Anh 5 - Phieu luong](img/screenshot_1782061442.png)
