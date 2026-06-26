@@ -57,9 +57,30 @@ Các nhóm nghiệp vụ trọng tâm:
 - Kế thừa cấu trúc Odoo 15 từ repo mẫu, không tách rời khỏi nền tảng ERP.
 - Thiết kế module theo nghiệp vụ thật: tài sản, nhân sự, phòng họp, mượn trả, bảo trì, đặt lịch.
 - Có dữ liệu mẫu phục vụ demo và kiểm thử luồng end-to-end.
-- Có dashboard, báo cáo và ảnh giao diện phục vụ báo cáo cuối học phần.
+- Có dashboard, báo cáo và bộ ảnh minh chứng được chọn lọc, không đẩy tràn ảnh lên GitHub.
 - Có lớp AI hỗ trợ nghiệp vụ theo hướng kiểm soát dữ liệu, hạn chế trả lời chung chung.
 - Có script seed dữ liệu để tạo nhanh môi trường demo.
+
+## 2.1. Core Feature Review
+
+Tài liệu review tính năng cốt lõi được tách riêng để người chấm hoặc người review code có thể đi thẳng vào phần quan trọng nhất của dự án:
+
+```text
+docs/CORE_FEATURE_REVIEW.md
+```
+
+Tài liệu này tập trung vào:
+
+| Nhóm tính năng | Điểm review chính |
+| --- | --- |
+| HR master data | Nhân sự là dữ liệu gốc cho người nhận tài sản, người mượn, người đặt phòng và người phụ trách |
+| Asset lifecycle | Tài sản có trạng thái, người dùng, vị trí, cấp phát, mượn/trả, bảo trì, kiểm kê và thanh lý |
+| Meeting booking | Phòng họp có sức chứa, thiết bị, lịch đặt, phê duyệt và kiểm tra xung đột |
+| Business controls | Có phân quyền, trạng thái xử lý, sequence, cron và dữ liệu lịch sử |
+| Dashboard/report | Có màn hình tổng hợp để theo dõi tình trạng tài sản, đặt phòng, mượn trả và bảo trì |
+| AI assistant | AI bám vào dữ liệu Odoo, có lịch sử hỏi đáp và fallback khi không dùng API trả phí |
+
+Đây là phần nên dùng khi trình bày hoặc bảo vệ: đi từ bài toán doanh nghiệp, sang model Odoo, sang luồng dữ liệu, rồi mới mở giao diện minh chứng.
 
 ---
 
