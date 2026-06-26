@@ -1,4 +1,84 @@
+# sphinx build directories
+_build/
+
+# dotfiles
+.*
+!.gitignore
+!.github
+!.mailmap
+# compiled python files
+*.py[co]
 __pycache__/
-*.pyc
+# setup.py egg_info
+*.egg-info
+# emacs backup files
+*~
+# hg stuff
+*.orig
+status
+# odoo filestore
+odoo/filestore
+# maintenance migration scripts
+odoo/addons/base/maintenance
+# window installation config file
+/odoo.conf
+
+# generated for windows installer?
+install/win32/*.bat
+install/win32/meta.py
+
+# needed only when building for win32
+setup/win32/static/less/
+setup/win32/static/wkhtmltopdf/
+setup/win32/static/postgresql*.exe
+
+# js tooling
+node_modules
+jsconfig.json
+tsconfig.json
+package-lock.json
+package.json
+.husky
+
+# various virtualenv
+/bin/
+/build/
+/dist/
+/include/
+/lib/
+/man/
+/share/
+/src/
+/venv/
+/venv_15_01/
+/.venv/
+
+# Configuration files with secrets
+*.conf.local
+*_credentials.xml
+*_secrets.xml
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Log files
+odoo.log
+nohup.out
 *.log
-.DS_Store
+
+# Database dumps
+*.sql
+*.dump
+
+# Local AI/client configuration
+opencode.json
+
+# Local report drafts and generated helpers
+*.docx
+/build_final_report.py
+/fix_report.py
+
+# Local runtime data
+/.odoo_data/

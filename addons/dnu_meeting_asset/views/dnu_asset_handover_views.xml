@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- ============================================= -->
+  <!-- BIÊN BẢN BÀN GIAO TÀI SẢN (MƯỢN/TRẢ)         -->
+  <!-- ============================================= -->
+  <!-- Tree View -->
+  <record id="view_asset_handover_tree" model="ir.ui.view">
+    <field name="name">dnu.asset.handover.tree</field>
+    <field name="model">dnu.asset.handover</field>
+    <field name="arch" type="xml">
+      <tree string="Biên bản bàn giao" decoration-info="state=='draft'" decoration-warning="state=='pending_signature'" decoration-success="state=='completed'">
+        <field name="name" />
+        <field name="handover_type" />
+        <field name="asset_name" />
+        <field name="nhan_vien_id" />
+        <field name="don_vi_id" />
+        <field name="handover_date" />
+        <field name="condition_handover" />
+        <field name="state" widget="badge" decoration-info="state=='draft'" decoration-warning="state=='pending_signature'" decoration-success="state in ['signed', 'completed']" />
+      </tree>
+    </field>
+  </record>
+  <!-- Kanban View -->
+  <record id="view_asset_handover_kanban" model="ir.ui.view">
+    <field name="name">dnu.asset.handover.kanban</field>
+    <field name="model">dnu.asset.handover</field>
+    <field name="arch" type="xml">
+      <kanban default_group_by="state" class="o_kanban_small_column">
+        <field name="name" />
+        <field name="handover_type" />
+        <field name="asset_name" />
+        <field name="nhan_vien_id" />
+        <field name="deliverer_id" />
+        <field name="handover_date" />
+        <field name="state" />
+        <field name="receiver_signature" />
+        <field name="deliverer_signature" />
+        <templates>
+          <t t-name="kanban-box">
+            <div class="oe_kanban_global_click o_kanban_card">
+              <div class="oe_kanban_details">
+                <div class="o_kanban_record_top">
+                  <strong>
+                    <field name="name" />
+                  </strong>
+                  <span class="badge" t-if="record.handover_type.raw_value == 'lending'" style="background-color: #2980B9; color: white;">MƯỢN</span>
+                  <span class="badge" t-if="record.handover_type.raw_value == 'return'" style="background-color: #8E44AD; color: white;">TRẢ</span>
+                </div>
+                <div class="o_kanban_record_body">
+                  <div>
+                    <i class="fa fa-cube" title="Tài sản" />
+                    <t t-esc="record.asset_name.value" />
+                  </div>
+                  <div>
+                    <i class="fa fa-user" title="Nhân viên" />
+                    <t t-esc="record.nhan_vien_id.value" />
+                  </div>
+                  <div class="text-muted">
+                    <t t-if="record.receiver_signature.raw_value">✅ Người nhận đã ký</t>
+                    <t t-else="">⏳ Chờ người nhận ký</t>
+                                        |
+                                        <t t-if="record.deliverer_signature.raw_value">✅ Người giao đã ký</t><t t-else="">⏳ Chờ người giao ký</t></div>
+                </div>
+                <div class="o_kanban_record_bottom">
+                  <div class="oe_kanban_bottom_left">
+                    <i class="fa fa-calendar" title="Ngày bàn giao" />
+                    <t t-esc="record.handover_date.value" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </t>
+        </templates>
+      </kanban>
+    </field>
+  </record>
+  <!-- Form View -->
+  <record id="view_asset_handover_form" model="ir.ui.view">
+    <field name="name">dnu.asset.handover.form</field>
+    <field name="model">dnu.asset.handover</field>
+    <field name="arch" type="xml">
+      <form string="Biên bản bàn giao">
+        <header>
+          <button name="action_send_for_signature" string="Gửi để ký" type="object" class="oe_highlight" states="draft" />
+          <button name="action_sign_receiver" string="Người nhận ký" type="object" class="btn-primary" states="pending_signature" attrs="{'invisible': [('receiver_signature', '!=', False)]}" />
+          <button name="action_complete" string="Hoàn thành" type="object" class="oe_highlight" states="pending_signature,signed" />
+          <button name="action_print_handover" string="In biên bản" type="object" icon="fa-print" />
+          <button name="action_cancel" string="Hủy" type="object" states="draft,pending_signature" />
+          <field name="state" widget="statusbar" statusbar_visible="draft,pending_signature,signed,completed" />
+        </header>
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button name="action_open_van_ban" type="object" class="oe_stat_button" icon="fa-paper-plane" attrs="{'invisible': [('van_ban_id', '=', False)]}">
+              <div class="o_stat_info">
+                <span class="o_stat_text">Văn bản đi</span>
+              </div>
+            </button>
+            <field name="van_ban_id" invisible="1" />
+          </div>
+          <div class="oe_title">
+            <h1>
+              <field name="name" readonly="1" />
+            </h1>
+          </div>
+          <group>
+            <group string="Thông tin chung">
+              <field name="handover_type" widget="radio" options="{'horizontal': true}" />
+              <field name="handover_date" />
+              <field name="expected_return_date" attrs="{'invisible': [('handover_type', '!=', 'lending')]}" />
+            </group>
+            <group string="Tài sản">
+              <field name="asset_id" options="{'no_create': True}" />
+              <field name="asset_code" readonly="1" />
+              <field name="asset_name" readonly="1" />
+            </group>
+          </group>
+          <group>
+            <group string="Người mượn/trả">
+              <field name="nhan_vien_id" options="{'no_create': True}" />
+              <field name="don_vi_id" readonly="1" />
+            </group>
+            <group></group>
+          </group>
+          <group>
+            <group string="Tình trạng tài sản">
+              <field name="condition_handover" />
+              <field name="condition_return" attrs="{'invisible': [('handover_type', '!=', 'return')]}" />
+              <field name="accessories" />
+            </group>
+            <group string="Liên kết">
+              <field name="lending_id" readonly="1" attrs="{'invisible': [('lending_id', '=', False)]}" />
+            </group>
+          </group>
+          <notebook>
+            <page string="Chữ ký điện tử">
+              <group>
+                <group string="Chữ ký người nhận (người mượn/trả)">
+                  <field name="receiver_signature" widget="image" class="oe_avatar" />
+                  <field name="receiver_signature_date" readonly="1" />
+                </group>
+                <group string="Chữ ký người giao" attrs="{'invisible': [('handover_type', '=', 'return')]}">
+                  <field name="deliverer_signature" widget="image" class="oe_avatar" />
+                  <field name="deliverer_signature_date" readonly="1" />
+                </group>
+              </group>
+              <div class="alert alert-info" role="alert" attrs="{'invisible': [('handover_type', '!=', 'return')]}">
+                <strong>Lưu ý:</strong> Biên bản trả chỉ yêu cầu chữ ký của "Người trả".
+                            </div>
+            </page>
+            <page string="Ghi chú &amp; Tệp đính kèm">
+              <group>
+                <field name="notes" nolabel="1" placeholder="Ghi chú thêm về biên bản bàn giao..." />
+              </group>
+              <group string="Tệp đính kèm">
+                <field name="attachment_ids" widget="many2many_binary" nolabel="1" />
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+        <div class="oe_chatter">
+          <field name="message_follower_ids" />
+          <field name="activity_ids" />
+          <field name="message_ids" />
+        </div>
+      </form>
+    </field>
+  </record>
+  <!-- Search View -->
+  <record id="view_asset_handover_search" model="ir.ui.view">
+    <field name="name">dnu.asset.handover.search</field>
+    <field name="model">dnu.asset.handover</field>
+    <field name="arch" type="xml">
+      <search string="Tìm kiếm Biên bản">
+        <field name="name" />
+        <field name="asset_id" />
+        <field name="nhan_vien_id" />
+        <field name="don_vi_id" />
+        <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]" />
+        <filter string="Chờ ký" name="pending" domain="[('state', '=', 'pending_signature')]" />
+        <filter string="Đã ký" name="signed" domain="[('state', '=', 'signed')]" />
+        <filter string="Hoàn thành" name="completed" domain="[('state', '=', 'completed')]" />
+        <separator />
+        <filter string="Mượn tài sản" name="lending" domain="[('handover_type', '=', 'lending')]" />
+        <filter string="Trả tài sản" name="return" domain="[('handover_type', '=', 'return')]" />
+        <group expand="0" string="Nhóm theo">
+          <filter string="Loại biên bản" name="group_type" context="{'group_by': 'handover_type'}" />
+          <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}" />
+          <filter string="Đơn vị" name="group_department" context="{'group_by': 'don_vi_id'}" />
+          <filter string="Ngày bàn giao" name="group_date" context="{'group_by': 'handover_date:month'}" />
+        </group>
+      </search>
+    </field>
+  </record>
+  <!-- Action -->
+  <record id="action_asset_handover" model="ir.actions.act_window">
+    <field name="name">Biên bản mượn/trả</field>
+    <field name="res_model">dnu.asset.handover</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+                Tạo biên bản mượn/trả tài sản
+            </p>
+      <p>
+                Biên bản bàn giao ghi nhận việc mượn hoặc trả tài sản,
+                bao gồm chữ ký điện tử xác nhận.
+            </p>
+    </field>
+  </record>
+  <!-- Menu -->
+</odoo>

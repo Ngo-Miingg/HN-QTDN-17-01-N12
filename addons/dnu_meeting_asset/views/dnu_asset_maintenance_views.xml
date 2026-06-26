@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Kanban View -->
+        <record id="view_dnu_asset_maintenance_kanban" model="ir.ui.view">
+            <field name="name">dnu.asset.maintenance.kanban</field>
+            <field name="model">dnu.asset.maintenance</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state" class="o_kanban_small_column o_maintenance_modern_kanban">
+                    <field name="name"/>
+                    <field name="asset_id"/>
+                    <field name="priority"/>
+                    <field name="state"/>
+                    <field name="assigned_tech_id"/>
+                    <field name="date_reported"/>
+                    <field name="date_scheduled"/>
+                    <field name="maintenance_type"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_maintenance_card">
+                                <style>
+                                    .o_maintenance_modern_kanban .o_maintenance_card {
+                                        border-radius: 10px;
+                                        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+                                        transition: all 0.3s ease;
+                                        border-left: 4px solid;
+                                        padding: 12px;
+                                        margin-bottom: 8px;
+                                    }
+                                    .o_maintenance_modern_kanban .o_maintenance_card:hover {
+                                        transform: translateX(3px);
+                                        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+                                    }
+                                    .o_maintenance_card[data-state="planned"] { border-left-color: #3498DB; }
+                                    .o_maintenance_card[data-state="in_progress"] { border-left-color: #E67E22; }
+                                    .o_maintenance_card[data-state="done"] { border-left-color: #27AE60; }
+                                    .o_maintenance_card[data-state="cancelled"] { border-left-color: #95A5A6; }
+                                    
+                                    .o_priority_stars {
+                                        color: #F39C12;
+                                        font-size: 13px;
+                                    }
+                                    .o_maintenance_type_badge {
+                                        display: inline-block;
+                                        padding: 3px 8px;
+                                        border-radius: 10px;
+                                        font-size: 10px;
+                                        font-weight: 600;
+                                        background: #ECF0F1;
+                                        color: #2C3E50;
+                                        text-transform: uppercase;
+                                    }
+                                    .o_maintenance_info {
+                                        margin: 6px 0;
+                                        font-size: 12px;
+                                        color: #34495E;
+                                    }
+                                </style>
+                                
+                                <div t-att-data-state="record.state.raw_value">
+                                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                        <div style="flex: 1;">
+                                            <strong style="font-size: 14px; color: #2C3E50;">
+                                                <t t-esc="record.name.value"/>
+                                            </strong>
+                                        </div>
+                                        <div class="o_priority_stars">
+                                            <field name="priority" widget="priority"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin: 10px 0;">
+                                        <span class="o_maintenance_type_badge">
+                                            <i class="fa fa-wrench" title="Loại bảo trì"/> <t t-esc="record.maintenance_type.value"/>
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="o_maintenance_info">
+                                        <div style="margin-bottom: 6px;">
+                                            <i class="fa fa-cube" style="color: #E67E22; width: 16px;" title="Tài sản"/>
+                                            <strong><t t-esc="record.asset_id.value"/></strong>
+                                        </div>
+                                        <div t-if="record.assigned_tech_id.value" style="margin-bottom: 6px;">
+                                            <i class="fa fa-user" style="color: #2980B9; width: 16px;" title="Kỹ thuật viên"/>
+                                            <t t-esc="record.assigned_tech_id.value"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="border-top: 1px solid #ECF0F1; margin-top: 10px; padding-top: 8px; display: flex; justify-content: space-between; font-size: 11px; color: #7F8C8D;">
+                                        <div t-if="record.date_reported.value">
+                                            <i class="fa fa-calendar" title="Ngày báo cáo"/> <t t-esc="record.date_reported.value"/>
+                                        </div>
+                                        <div t-if="record.date_scheduled.value" style="color: #E67E22;">
+                                            <i class="fa fa-clock-o" title="Lịch bảo trì"/> <t t-esc="record.date_scheduled.value"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Tree View -->
+        <record id="view_dnu_asset_maintenance_tree" model="ir.ui.view">
+            <field name="name">dnu.asset.maintenance.tree</field>
+            <field name="model">dnu.asset.maintenance</field>
+            <field name="arch" type="xml">
+                <tree string="Bảo trì" decoration-danger="priority=='urgent'" decoration-warning="priority=='high'">
+                    <field name="name"/>
+                    <field name="asset_id"/>
+                    <field name="maintenance_type"/>
+                    <field name="lending_id" optional="hide"/>
+                    <field name="handover_id" optional="hide"/>
+                    <field name="reporter_name" string="Người báo cáo"/>
+                    <field name="nhan_vien_bao_cao_id" optional="hide"/>
+                    <field name="date_reported"/>
+                    <field name="tech_name" string="Kỹ thuật viên"/>
+                    <field name="nhan_vien_ky_thuat_id" optional="hide"/>
+                    <field name="priority" widget="priority"/>
+                    <field name="state" widget="badge" decoration-info="state=='pending'" decoration-warning="state=='in_progress'" decoration-success="state=='done'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_dnu_asset_maintenance_form" model="ir.ui.view">
+            <field name="name">dnu.asset.maintenance.form</field>
+            <field name="model">dnu.asset.maintenance</field>
+            <field name="arch" type="xml">
+                <form string="Bảo trì">
+                    <header>
+                        <button name="action_submit" string="Gửi yêu cầu" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_start" string="Bắt đầu" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
+                        <button name="action_done" string="Hoàn thành" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                        <button name="action_cancel" string="Hủy" type="object" attrs="{'invisible': [('state', 'in', ['done', 'cancelled'])]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,in_progress,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="priority" widget="priority"/>
+                            <button class="oe_stat_button" type="object" name="action_view_van_ban_den" icon="fa-file-text-o">
+                                <field name="van_ban_den_count" widget="statinfo" string="Văn bản đến"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Thông tin tài sản">
+                                <field name="asset_id" options="{'no_create': True}"/>
+                                <field name="maintenance_type"/>
+                                <field name="date_reported"/>
+                                <field name="lending_id" readonly="1" attrs="{'invisible': [('lending_id', '=', False)]}"/>
+                                <field name="handover_id" readonly="1" attrs="{'invisible': [('handover_id', '=', False)]}"/>
+                            </group>
+                            <group string="Người báo cáo">
+                                <field name="nhan_vien_bao_cao_id" string="Người báo cáo" options="{'no_quick_create': True}" placeholder="Chọn nhân viên"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Kỹ thuật viên xử lý">
+                                <field name="nhan_vien_ky_thuat_id" 
+                                       string="Kỹ thuật viên" 
+                                       options="{'no_quick_create': True}" 
+                                       placeholder="Chọn kỹ thuật viên"/>
+                            </group>
+                            <group string="Lịch trình">
+                                <field name="date_scheduled"/>
+                                <field name="date_started" attrs="{'invisible': [('state', 'in', ['draft', 'pending'])]}"/>
+                                <field name="date_completed" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                                <field name="duration_days" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Mô tả sự cố/yêu cầu bảo trì..."/>
+                        </group>
+                        <group string="Chi phí">
+                            <group>
+                                <field name="cost_estimate"/>
+                            </group>
+                            <group>
+                                <field name="cost_actual" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Công việc đã làm" attrs="{'invisible': [('state', 'in', ['draft', 'pending'])]}">
+                                <field name="work_done" placeholder="Mô tả công việc đã thực hiện..."/>
+                            </page>
+                            <page string="Vật tư sử dụng" attrs="{'invisible': [('state', 'in', ['draft', 'pending'])]}">
+                                <field name="parts_used" placeholder="Danh sách vật tư/linh kiện đã sử dụng..."/>
+                            </page>
+                            <page string="Tài liệu đính kèm">
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </page>
+                            <page string="Ghi chú">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_dnu_asset_maintenance" model="ir.actions.act_window">
+            <field name="name">Yêu cầu bảo trì</field>
+            <field name="res_model">dnu.asset.maintenance</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_pending': 1}</field>
+        </record>
+
+    </data>
+</odoo>

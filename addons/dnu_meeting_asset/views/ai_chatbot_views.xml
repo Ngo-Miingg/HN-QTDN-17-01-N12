@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_ai_chatbot_wizard_form" model="ir.ui.view">
+            <field name="name">ai.chatbot.wizard.form</field>
+            <field name="model">ai.chatbot.wizard</field>
+            <field name="arch" type="xml">
+                <form string="AI Chatbot">
+                    <sheet>
+                        <group>
+                            <field name="show_result" invisible="1"/>
+                            <field name="session_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="message" placeholder="Nhập câu hỏi, ví dụ: Nhắc tôi các phòng họp trống chiều nay..."/>
+                        </group>
+                        <group attrs="{'invisible': [('show_result', '=', False)]}">
+                            <field name="response" readonly="1" nolabel="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Lịch sử">
+                                <field name="history_html" readonly="1" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button name="action_send" type="object" string="Gửi" class="btn-primary"/>
+                        <button name="action_clear_history" type="object" string="Xoá lịch sử" class="btn-secondary"/>
+                        <button string="Đóng" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_ai_chatbot" model="ir.actions.act_window">
+            <field name="name">AI Chatbot</field>
+            <field name="res_model">ai.chatbot.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_session_id': False}</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Main Menu -->
+        <menuitem id="menu_dnu_main"
+                  name="Tài sản &amp; Phòng họp"
+                  sequence="-1"
+                  action="action_asset_meeting_dashboard"
+                  web_icon="dnu_meeting_asset,static/description/icon.png"
+                  groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- ============================================= -->
+        <!-- BẢNG ĐIỀU KHIỂN                              -->
+        <!-- ============================================= -->
+        <menuitem id="menu_dnu_dashboard"
+                  name="Bảng điều khiển"
+                  parent="menu_dnu_main"
+                  action="action_asset_meeting_dashboard"
+                  sequence="1" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Submenu Thống kê -->
+        <menuitem id="menu_dashboard_statistics"
+                  name="Thống kê"
+                  parent="menu_dnu_dashboard"
+                  sequence="1" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_statistics_assets"
+                  name="Thống kê Tài sản"
+                  parent="menu_dashboard_statistics"
+                  action="action_asset_statistics"
+                  sequence="1" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_statistics_bookings"
+                  name="Thống kê Đặt phòng"
+                  parent="menu_dashboard_statistics"
+                  action="action_booking_statistics"
+                  sequence="2" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_statistics_maintenance"
+                  name="Thống kê Bảo trì"
+                  parent="menu_dashboard_statistics"
+                  action="action_maintenance_statistics"
+                  sequence="3" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_statistics_lending"
+                  name="Thống kê Mượn trả"
+                  parent="menu_dashboard_statistics"
+                  action="action_lending_statistics"
+                  sequence="4" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Submenu Truy cập nhanh -->
+        <menuitem id="menu_dashboard_quick_access"
+                  name="Truy cập nhanh"
+                  parent="menu_dnu_dashboard"
+                  sequence="2" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dashboard_bookings_today"
+                  name="Đặt phòng Hôm nay"
+                  parent="menu_dashboard_quick_access"
+                  action="action_dashboard_bookings_today"
+                  sequence="1" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dashboard_maintenance"
+                  name="Bảo trì Chờ xử lý"
+                  parent="menu_dashboard_quick_access"
+                  action="action_dashboard_maintenance_pending"
+                  sequence="2" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dashboard_bookings_pending"
+                  name="Đặt phòng Chờ duyệt"
+                  parent="menu_dashboard_quick_access"
+                  action="action_dashboard_bookings_pending"
+                  sequence="3"
+                  groups="base.group_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Quick Actions -->
+        <menuitem id="menu_dnu_quick_booking"
+                  name="Đặt phòng nhanh"
+                  parent="menu_dnu_main"
+                  action="action_quick_booking_wizard"
+                  sequence="2" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- User Guide -->
+        <menuitem id="menu_dnu_user_guide"
+              name="Hướng dẫn sử dụng"
+              parent="menu_dnu_dashboard"
+              action="action_dnu_user_guide"
+              sequence="9" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Asset Management -->
+        <menuitem id="menu_dnu_asset"
+                  name="Quản lý tài sản"
+                  parent="menu_dnu_main"
+                  sequence="10" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_asset"
+                  name="Tài sản"
+                  parent="menu_dnu_asset"
+                  action="action_dnu_asset"
+                  sequence="10" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_category"
+                  name="Danh mục"
+                  parent="menu_dnu_asset"
+                  action="action_dnu_asset_category"
+                  sequence="20" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_assignment"
+                  name="Lịch sử gán"
+                  parent="menu_dnu_asset"
+                  action="action_dnu_asset_assignment"
+                  sequence="30" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_lending"
+                  name="Mượn tài sản"
+                  parent="menu_dnu_asset"
+                  action="action_dnu_asset_lending"
+                  sequence="35" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_maintenance"
+                  name="Bảo trì"
+                  parent="menu_dnu_asset"
+                  action="action_dnu_asset_maintenance"
+                  sequence="40" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_maintenance_schedule"
+                  name="Lịch bảo trì định kỳ"
+                  parent="menu_dnu_asset"
+                  action="action_dnu_maintenance_schedule"
+                  sequence="45" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_depreciation"
+                  name="Khấu hao"
+                  parent="menu_dnu_asset"
+                  action="action_asset_depreciation"
+                  sequence="50" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_inventory"
+                  name="Kiểm kê"
+                  parent="menu_dnu_asset"
+                  action="action_asset_inventory"
+                  sequence="60" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_transfer"
+                  name="Luân chuyển"
+                  parent="menu_dnu_asset"
+                  action="action_asset_transfer"
+                  sequence="70" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_disposal"
+                  name="Thanh lý"
+                  parent="menu_dnu_asset"
+                  action="action_asset_disposal"
+                  sequence="80" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_asset_disposal_rule"
+              name="Quy tắc giá thanh lý"
+              parent="menu_dnu_asset"
+              action="action_asset_disposal_rule"
+              sequence="85"
+              groups="base.group_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Automation Alerts Menu -->
+        <menuitem id="menu_dnu_asset_automation"
+                  name="Cảnh báo &amp; Tự động"
+                  parent="menu_dnu_asset"
+                  sequence="90"
+                  active="False" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_overdue_lending"
+                  name="Phiếu mượn quá hạn"
+                  parent="menu_dnu_asset_automation"
+                  action="action_overdue_lendings_dashboard"
+                  sequence="10"
+                  active="False" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_warranty_expiring"
+                  name="Sắp hết bảo hành"
+                  parent="menu_dnu_asset_automation"
+                  action="action_assets_warranty_expiring"
+                  sequence="20"
+                  active="False" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_missing_assets"
+                  name="Tài sản mất"
+                  parent="menu_dnu_asset_automation"
+                  action="action_missing_assets"
+                  sequence="30"
+                  active="False" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_pending_returns"
+                  name="Chờ thu hồi (Offboarding)"
+                  parent="menu_dnu_asset_automation"
+                  action="action_pending_asset_returns"
+                  sequence="40"
+                  active="False" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Meeting Management -->
+        <menuitem id="menu_dnu_meeting"
+                  name="Quản lý phòng họp"
+                  parent="menu_dnu_main"
+                  sequence="20" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_meeting_booking"
+                  name="Đặt phòng"
+                  parent="menu_dnu_meeting"
+                  action="action_dnu_meeting_booking"
+                  sequence="10" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+        <menuitem id="menu_dnu_meeting_approval"
+                  name="Duyệt đặt phòng"
+                  parent="menu_dnu_meeting"
+                  action="action_dnu_meeting_booking_approval"
+                  sequence="15"
+                  groups="base.group_user,dnu_meeting_asset.group_facility_staff"/>
+        <menuitem id="menu_dnu_meeting_room"
+                  name="Phòng họp"
+                  parent="menu_dnu_meeting"
+                  action="action_dnu_meeting_room"
+                  sequence="20" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Booking History Sub-menu -->
+        <menuitem id="menu_dnu_meeting_history"
+                  name="Lịch sử đặt phòng"
+                  parent="menu_dnu_meeting"
+                  sequence="25" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_booking_history_today"
+                  name="Hôm nay"
+                  parent="menu_dnu_meeting_history"
+                  action="action_booking_history_today"
+                  sequence="10" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_booking_history_week"
+                  name="Tuần này"
+                  parent="menu_dnu_meeting_history"
+                  action="action_booking_history_week"
+                  sequence="20" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_booking_history_month"
+                  name="Tháng này"
+                  parent="menu_dnu_meeting_history"
+                  action="action_booking_history_month"
+                  sequence="30" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_booking_history_all"
+                  name="Tất cả"
+                  parent="menu_dnu_meeting_history"
+                  action="action_booking_history_all"
+                  sequence="40" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Reports -->
+        <menuitem id="menu_dnu_reports"
+                  name="Báo cáo"
+                  parent="menu_dnu_main"
+                  sequence="30" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_report_asset"
+                  name="Báo cáo tài sản"
+                  parent="menu_dnu_reports"
+                  action="action_report_asset_summary"
+                  sequence="10" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_dnu_report_booking"
+                  name="Báo cáo đặt phòng"
+                  parent="menu_dnu_reports"
+                  action="action_report_booking_summary"
+                  sequence="20" groups="base.group_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Configuration -->
+        <menuitem id="menu_dnu_config"
+                  name="Cấu hình"
+                  parent="menu_dnu_main"
+                  sequence="100"
+                  groups="base.group_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Zoom Configuration -->
+        <menuitem id="menu_zoom_integration"
+                  name="Tích hợp Zoom"
+                  parent="menu_dnu_config"
+                  action="action_zoom_integration"
+                  sequence="10" groups="base.group_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- Google Calendar Configuration -->
+        <menuitem id="menu_google_calendar_integration"
+                  name="Tích hợp Google Calendar"
+                  parent="menu_dnu_config"
+                  action="action_google_calendar_integration"
+                  sequence="20" groups="base.group_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <!-- OpenAI Configuration -->
+        <menuitem id="menu_openai_configuration"
+                  name="🤖 Cấu hình OpenAI"
+                  parent="menu_dnu_config"
+                  action="action_openai_configuration"
+                  sequence="30" groups="base.group_user,dnu_meeting_asset.group_facility_staff"/>
+        
+        <!-- AI Tools Menu -->
+        <menuitem id="menu_dnu_ai"
+                  name="🤖 Trợ lý AI"
+                  parent="menu_dnu_main"
+                  sequence="3" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_ai_asset_wizard"
+                  name="AI Tài sản"
+                  parent="menu_dnu_ai"
+                  action="action_ai_asset_wizard"
+                  sequence="10" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_ai_chatbot"
+                  name="AI Chatbot"
+                  parent="menu_dnu_ai"
+                  action="action_ai_chatbot"
+                  sequence="15" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_ai_meeting_wizard"
+                  name="AI Phòng họp"
+                  parent="menu_dnu_ai"
+                  action="action_ai_meeting_wizard"
+                  sequence="20" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+        <menuitem id="menu_ai_hr_wizard"
+                  name="AI Nhân sự"
+                  parent="menu_dnu_ai"
+                  action="action_ai_hr_wizard"
+                  sequence="30" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+            <menuitem id="menu_ai_history"
+                          name="Lịch sử AI"
+                          parent="menu_dnu_ai"
+                          action="action_ai_request"
+                          sequence="40" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+            <menuitem id="menu_ai_sessions"
+                          name="Phiên AI"
+                          parent="menu_dnu_ai"
+                          action="action_ai_session"
+                          sequence="50" groups="base.group_user,dnu_meeting_asset.group_asset_user,dnu_meeting_asset.group_meeting_user,dnu_meeting_asset.group_facility_staff"/>
+
+    </data>
+</odoo>

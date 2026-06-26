@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_van_ban_sign_wizard_form" model="ir.ui.view">
+            <field name="name">van_ban_den.sign.wizard.form</field>
+            <field name="model">van_ban_den.sign.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Ký văn bản">
+                    <field name="is_handover_receiver_sign" invisible="1"/>
+                    <field name="is_handover_director_sign" invisible="1"/>
+                    
+                    <group>
+                        <group string="Thông tin văn bản">
+                            <field name="ten_van_ban" readonly="1"/>
+                            <field name="request_type" readonly="1"/>
+                            <field name="requester_name" readonly="1"/>
+                        </group>
+                        
+                        <!-- Ghi chú phê duyệt cho người duyệt thông thường -->
+                        <group string="Phê duyệt" attrs="{'invisible': ['|', ('is_handover_receiver_sign', '=', True), ('is_handover_director_sign', '=', True)]}">
+                            <field name="approval_note" placeholder="Nhập ghi chú (nếu có)..."/>
+                        </group>
+                        
+                        <!-- Hướng dẫn cho người nhận bàn giao -->
+                        <group string="Xác nhận tiếp nhận tài sản" attrs="{'invisible': [('is_handover_receiver_sign', '=', False)]}">
+                            <div class="alert alert-info">
+                                <p><strong>📋 Hướng dẫn:</strong></p>
+                                <p>1. Ký tên vào ô bên dưới để xác nhận nhận tài sản</p>
+                                <p>2. Bấm nút <strong>"Xác nhận"</strong> để hoàn tất</p>
+                                <p>3. Sau đó bấm <strong>"Gửi lên Giám đốc"</strong> để giám đốc ký duyệt</p>
+                            </div>
+                        </group>
+                        
+                        <!-- Hướng dẫn cho Giám đốc ký duyệt -->
+                        <group string="Giám đốc ký duyệt bàn giao" attrs="{'invisible': [('is_handover_director_sign', '=', False)]}">
+                            <div class="alert alert-success">
+                                <p><strong>📋 Hướng dẫn:</strong></p>
+                                <p>1. Ký tên vào ô bên dưới để duyệt biên bản bàn giao</p>
+                                <p>2. Bấm nút <strong>"Xác nhận duyệt"</strong> để hoàn tất</p>
+                                <p>3. Sau đó bấm <strong>"Gửi biên bản về người yêu cầu"</strong> để hoàn thành</p>
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="Chữ ký"/>
+                    <group>
+                        <field name="signature" widget="signature" required="1"/>
+                    </group>
+                    <footer>
+                        <!-- Nút cho người nhận bàn giao - CHỈ có Xác nhận -->
+                        <button name="action_confirm_receive" string="✅ Xác nhận" type="object" 
+                                class="btn-success"
+                                attrs="{'invisible': [('is_handover_receiver_sign', '=', False)]}"/>
+                        
+                        <!-- Nút cho Giám đốc ký duyệt bàn giao - CHỈ có Xác nhận duyệt -->
+                        <button name="action_confirm_director" string="✅ Xác nhận duyệt" type="object" 
+                                class="btn-success"
+                                attrs="{'invisible': [('is_handover_director_sign', '=', False)]}"/>
+                        
+                        <!-- Nút cho người duyệt thông thường (không phải bàn giao) -->
+                        <button name="action_sign_and_approve" string="✅ Duyệt và Ký" type="object" 
+                                class="btn-success"
+                                attrs="{'invisible': ['|', ('is_handover_receiver_sign', '=', True), ('is_handover_director_sign', '=', True)]}"/>
+                        <button name="action_sign_and_reject" string="❌ Từ chối và Ký" type="object" 
+                                class="btn-danger"
+                                attrs="{'invisible': ['|', ('is_handover_receiver_sign', '=', True), ('is_handover_director_sign', '=', True)]}"/>
+                        <button name="action_sign" string="Chỉ Ký" type="object" 
+                                class="btn-secondary"
+                                attrs="{'invisible': ['|', ('is_handover_receiver_sign', '=', True), ('is_handover_director_sign', '=', True)]}"/>
+                        
+                        <button string="Hủy" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

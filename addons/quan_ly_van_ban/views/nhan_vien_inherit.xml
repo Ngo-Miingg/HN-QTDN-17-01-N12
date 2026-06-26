@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="nhan_vien_view_form_inherit_vb" model="ir.ui.view">
+            <field name="name">nhan_vien.form.inherit.vb</field>
+            <field name="model">nhan_vien</field>
+            <field name="inherit_id" ref="nhan_su.view_nhan_vien_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_van_ban_den" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="van_ban_den_count" widget="statinfo" string="Văn bản đến"/>
+                        </button>
+                        <button name="action_view_van_ban_di" type="object" class="oe_stat_button" icon="fa-paper-plane">
+                            <field name="van_ban_di_count" widget="statinfo" string="Văn bản đi"/>
+                        </button>
+                    </div>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Văn bản đến xử lý">
+                        <field name="van_ban_den_ids" readonly="1">
+                            <tree>
+                                <field name="so_van_ban_den"/>
+                                <field name="ten_van_ban"/>
+                                <field name="so_hieu_van_ban"/>
+                                <field name="noi_gui_den"/>
+                                <field name="signer_employee_id"/>
+                                <field name="department_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Văn bản đã ký">
+                        <notebook>
+                            <page string="Văn bản đến đã ký">
+                                <field name="van_ban_ky_ids" readonly="1">
+                                    <tree>
+                                        <field name="so_van_ban_den"/>
+                                        <field name="ten_van_ban"/>
+                                        <field name="so_hieu_van_ban"/>
+                                        <field name="noi_gui_den"/>
+                                        <field name="handler_employee_id"/>
+                                        <field name="department_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Văn bản đi đã ký">
+                                <field name="van_ban_di_ky_ids" readonly="1">
+                                    <tree>
+                                        <field name="so_van_ban_di"/>
+                                        <field name="ten_van_ban"/>
+                                        <field name="so_hieu_van_ban"/>
+                                        <field name="noi_nhan"/>
+                                        <field name="handler_employee_id"/>
+                                        <field name="department_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </page>
+                    <page string="Văn bản nhận/phối hợp">
+                        <notebook>
+                            <page string="Văn bản đến nhận">
+                                <field name="van_ban_nhan_ids" readonly="1">
+                                    <tree>
+                                        <field name="so_van_ban_den"/>
+                                        <field name="ten_van_ban"/>
+                                        <field name="so_hieu_van_ban"/>
+                                        <field name="noi_gui_den"/>
+                                        <field name="handler_employee_id"/>
+                                        <field name="signer_employee_id"/>
+                                        <field name="department_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Văn bản đi nhận/phối hợp">
+                                <field name="van_ban_di_nhan_ids" readonly="1">
+                                    <tree>
+                                        <field name="so_van_ban_di"/>
+                                        <field name="ten_van_ban"/>
+                                        <field name="so_hieu_van_ban"/>
+                                        <field name="noi_nhan"/>
+                                        <field name="handler_employee_id"/>
+                                        <field name="signer_employee_id"/>
+                                        <field name="department_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </page>
+                    <page string="Biên bản tài sản">
+                        <field name="van_ban_di_ky_ids" readonly="1" domain="[('is_asset_document', '=', True)]">
+                            <tree>
+                                <field name="so_van_ban_di"/>
+                                <field name="ten_van_ban"/>
+                                <field name="so_hieu_van_ban"/>
+                                <field name="noi_nhan"/>
+                                <field name="handler_employee_id"/>
+                                <field name="department_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_van_ban_den_from_employee" model="ir.actions.act_window">
+            <field name="name">Văn bản đến</field>
+            <field name="res_model">van_ban_den</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('handler_employee_id', '=', active_id)]</field>
+            <field name="context">{'default_handler_employee_id': active_id}</field>
+        </record>
+    </data>
+</odoo>

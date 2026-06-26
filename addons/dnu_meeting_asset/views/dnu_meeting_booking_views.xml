@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_dnu_meeting_booking_calendar" model="ir.ui.view">
+            <field name="name">dnu.meeting.booking.calendar</field>
+            <field name="model">dnu.meeting.booking</field>
+            <field name="arch" type="xml">
+                <calendar string="Lịch đặt phòng"
+                          date_start="start_datetime"
+                          date_stop="end_datetime"
+                          color="room_id"
+                          mode="week">
+                    <field name="subject"/>
+                    <field name="room_id"/>
+                    <field name="organizer_name"/>
+                    <field name="state"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="view_dnu_meeting_booking_tree" model="ir.ui.view">
+            <field name="name">dnu.meeting.booking.tree</field>
+            <field name="model">dnu.meeting.booking</field>
+            <field name="arch" type="xml">
+                <tree string="Đặt phòng">
+                    <field name="name"/>
+                    <field name="subject"/>
+                    <field name="room_id"/>
+                    <field name="organizer_name" string="Người tổ chức"/>
+                    <field name="start_datetime"/>
+                    <field name="end_datetime"/>
+                    <field name="num_attendees"/>
+                    <field name="state" widget="badge"/>
+                    <button name="action_direct_approve" string="Duyệt" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                    <button name="action_direct_reject" string="Từ chối" type="object" class="btn-danger" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_dnu_meeting_booking_form" model="ir.ui.view">
+            <field name="name">dnu.meeting.booking.form</field>
+            <field name="model">dnu.meeting.booking</field>
+            <field name="arch" type="xml">
+                <form string="Đặt phòng họp">
+                    <header>
+                        <button name="action_submit" string="Gửi yêu cầu" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_confirm" string="Xác nhận" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'submitted')]}" groups="dnu_meeting_asset.group_facility_staff"/>
+                        <button name="action_checkin" string="Check-in" type="object" class="btn-success" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('can_checkin', '=', False)]}"/>
+                        <button name="action_checkout" string="Check-out" type="object" class="btn-warning" attrs="{'invisible': [('state', '!=', 'in_progress')]}"/>
+                        <button name="action_cancel" string="Hủy" type="object" attrs="{'invisible': [('state', 'in', ['done', 'cancelled'])]}" confirm="Bạn có chắc chắn muốn hủy lịch đặt phòng này?"/>
+                        <button name="action_suggest_alternatives" string="Gợi ý phòng khác" type="object" attrs="{'invisible': [('has_conflicts', '=', False)]}" class="btn-info"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,confirmed,in_progress,done"/>
+                    </header>
+                    <sheet>
+                        <field name="can_checkin" invisible="1"/>
+                        <field name="has_conflicts" invisible="1"/>
+                        <field name="is_past" invisible="1"/>
+                        <field name="attendee_ids" invisible="1"/>
+                        <field name="required_equipment_ids" invisible="1"/>
+
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_room_bookings" icon="fa-calendar">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Lịch</span>
+                                    <span class="o_stat_text">Phòng</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" icon="fa-users">
+                                <field name="num_attendees" widget="statinfo" string="Người tham dự"/>
+                            </button>
+                        </div>
+
+                        <div class="alert alert-danger" role="alert" attrs="{'invisible': [('has_conflicts', '=', False)]}">
+                            <strong><i class="fa fa-exclamation-triangle" title="Cảnh báo"/> Cảnh báo:</strong> Có xung đột với booking khác.
+                            <field name="conflict_ids" invisible="1"/>
+                        </div>
+
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                            <h2><field name="subject" placeholder="Chủ đề cuộc họp..."/></h2>
+                        </div>
+
+                        <group col="2">
+                            <group string="Thông tin cuộc họp">
+                                <field name="room_id" options="{'no_create': True}"/>
+                                <field name="meeting_type" widget="radio"/>
+                                <field name="start_datetime"/>
+                                <field name="end_datetime"/>
+                                <field name="duration" widget="float_time"/>
+                            </group>
+                            <group string="Người tổ chức &amp; Quy mô">
+                                <field name="nhan_vien_to_chuc_id" string="Người tổ chức" options="{'no_quick_create': True}"/>
+                                <field name="num_attendees"/>
+                                <group string="Tiện nghi" col="2">
+                                    <field name="need_projector"/>
+                                    <field name="need_video_conference"/>
+                                    <field name="need_whiteboard"/>
+                                </group>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Mô tả">
+                                <field name="description" placeholder="Mô tả chi tiết về cuộc họp..."/>
+                            </page>
+                            <page string="Thiết bị">
+                                <field name="required_equipment_ids"
+                                       widget="many2many_tags"
+                                       nolabel="1"
+                                       context="{'tree_view_ref': 'dnu_meeting_asset.view_dnu_asset_tree_selection'}">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="category_id"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Check-in/out" attrs="{'invisible': [('state', 'in', ['draft', 'submitted', 'cancelled'])]}">
+                                <group>
+                                    <field name="checkin_datetime" readonly="1"/>
+                                    <field name="checkout_datetime" readonly="1"/>
+                                    <field name="checkin_by" readonly="1"/>
+                                    <field name="notes"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_dnu_meeting_booking_search">
+            <field name="name">dnu.meeting.booking.search</field>
+            <field name="model">dnu.meeting.booking</field>
+            <field name="arch" type="xml">
+                <search string="Tìm kiếm đặt phòng">
+                    <field name="name"/>
+                    <field name="subject"/>
+                    <field name="room_id"/>
+                    <field name="nhan_vien_to_chuc_id"/>
+                    <field name="organizer_id"/>
+                    <filter string="Nháp" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Chờ duyệt" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                    <filter string="Đã xác nhận" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Đang diễn ra" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
+                    <filter string="Hoàn thành" name="done" domain="[('state', '=', 'done')]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter string="Phòng họp" name="group_room" context="{'group_by': 'room_id'}"/>
+                        <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}"/>
+                        <filter string="Ngày bắt đầu" name="group_start" context="{'group_by': 'start_datetime:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_dnu_meeting_booking" model="ir.actions.act_window">
+            <field name="name">Đặt phòng</field>
+            <field name="res_model">dnu.meeting.booking</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="search_view_id" ref="view_dnu_meeting_booking_search"/>
+        </record>
+
+        <record id="action_dnu_meeting_booking_approval" model="ir.actions.act_window">
+            <field name="name">Duyệt đặt phòng</field>
+            <field name="res_model">dnu.meeting.booking</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="view_dnu_meeting_booking_search"/>
+            <field name="context">{'search_default_submitted': 1}</field>
+        </record>
+
+        <record id="action_booking_history_today" model="ir.actions.act_window">
+            <field name="name">Lịch sử hôm nay</field>
+            <field name="res_model">dnu.meeting.booking</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="view_dnu_meeting_booking_search"/>
+        </record>
+
+        <record id="action_booking_history_week" model="ir.actions.act_window">
+            <field name="name">Lịch sử tuần này</field>
+            <field name="res_model">dnu.meeting.booking</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="view_dnu_meeting_booking_search"/>
+        </record>
+
+        <record id="action_booking_history_month" model="ir.actions.act_window">
+            <field name="name">Lịch sử tháng này</field>
+            <field name="res_model">dnu.meeting.booking</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="view_dnu_meeting_booking_search"/>
+        </record>
+
+        <record id="action_booking_history_all" model="ir.actions.act_window">
+            <field name="name">Tất cả lịch sử đặt phòng</field>
+            <field name="res_model">dnu.meeting.booking</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="view_dnu_meeting_booking_search"/>
+        </record>
+
+    </data>
+</odoo>

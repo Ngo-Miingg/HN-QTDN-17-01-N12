@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seed_category_electronics" model="dnu.asset.category">
+            <field name="name">Thiết bị điện tử</field>
+            <field name="code">ELEC</field>
+            <field name="description">Thiết bị điện tử văn phòng và phòng họp</field>
+            <field name="color">1</field>
+        </record>
+
+        <record id="seed_category_it" model="dnu.asset.category">
+            <field name="name">Thiết bị IT</field>
+            <field name="code">IT</field>
+            <field name="description">Máy tính, laptop và thiết bị mạng</field>
+            <field name="color">3</field>
+        </record>
+
+        <record id="seed_category_display" model="dnu.asset.category">
+            <field name="name">Thiết bị trình chiếu</field>
+            <field name="code">DISP</field>
+            <field name="description">Máy chiếu, TV và màn hình lớn</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="seed_room_meeting_a" model="dnu.meeting.room">
+            <field name="name">Phòng họp A</field>
+            <field name="code">ROOM-A</field>
+            <field name="capacity">10</field>
+            <field name="location">Tầng 3, Toà A</field>
+            <field name="floor">3</field>
+            <field name="building">Toà A</field>
+            <field name="has_projector" eval="True"/>
+            <field name="has_whiteboard" eval="True"/>
+            <field name="has_video_conference" eval="True"/>
+            <field name="has_wifi" eval="True"/>
+            <field name="has_air_conditioning" eval="True"/>
+            <field name="state">available</field>
+            <field name="allow_booking" eval="True"/>
+            <field name="description">Phòng họp nhỏ phù hợp cho các cuộc họp nhóm.</field>
+        </record>
+
+        <record id="seed_room_conference" model="dnu.meeting.room">
+            <field name="name">Phòng hội nghị lớn</field>
+            <field name="code">CONF-MAIN</field>
+            <field name="capacity">50</field>
+            <field name="location">Tầng 4, Toà A</field>
+            <field name="floor">4</field>
+            <field name="building">Toà A</field>
+            <field name="has_projector" eval="True"/>
+            <field name="has_tv" eval="True"/>
+            <field name="has_whiteboard" eval="True"/>
+            <field name="has_video_conference" eval="True"/>
+            <field name="has_wifi" eval="True"/>
+            <field name="has_air_conditioning" eval="True"/>
+            <field name="state">available</field>
+            <field name="allow_booking" eval="True"/>
+            <field name="description">Phòng hội nghị lớn cho các sự kiện quan trọng.</field>
+        </record>
+
+        <record id="seed_asset_projector" model="dnu.asset">
+            <field name="name">Máy chiếu Epson EB-2250U</field>
+            <field name="category_id" ref="seed_category_display"/>
+            <field name="serial_number">EPSON2250-001</field>
+            <field name="purchase_date" eval="DateTime.today().strftime('%Y-%m-%d')"/>
+            <field name="purchase_value">15000000</field>
+            <field name="state">available</field>
+            <field name="location">Kho thiết bị tầng 1</field>
+            <field name="description">Máy chiếu di động Full HD, độ sáng 5000 lumens.</field>
+        </record>
+
+        <record id="seed_asset_laptop" model="dnu.asset">
+            <field name="name">Laptop Dell Latitude 5420</field>
+            <field name="category_id" ref="seed_category_it"/>
+            <field name="serial_number">DELL-LAT-001</field>
+            <field name="purchase_date" eval="DateTime.today().strftime('%Y-%m-%d')"/>
+            <field name="purchase_value">25000000</field>
+            <field name="state">available</field>
+            <field name="location">Phòng IT</field>
+            <field name="description">Laptop dự phòng Core i5, 16GB RAM, 512GB SSD.</field>
+        </record>
+
+        <record id="seed_asset_tv_conference" model="dnu.asset">
+            <field name="name">TV Samsung 75 inch cho phòng họp</field>
+            <field name="category_id" ref="seed_category_display"/>
+            <field name="serial_number">SAM-TV75-001</field>
+            <field name="purchase_date" eval="DateTime.today().strftime('%Y-%m-%d')"/>
+            <field name="purchase_value">45000000</field>
+            <field name="state">available</field>
+            <field name="location">Phòng hội nghị lớn</field>
+            <field name="room_id" ref="seed_room_conference"/>
+            <field name="description">TV 75 inch 4K, lắp cố định tại phòng hội nghị chính.</field>
+        </record>
+    </data>
+</odoo>

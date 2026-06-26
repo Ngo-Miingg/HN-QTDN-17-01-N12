@@ -1,0 +1,1214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Email Template: Booking Confirmation -->
+        <record id="email_template_booking_confirmation" model="mail.template">
+            <field name="name">Meeting Booking: Confirmation</field>
+            <field name="model_id" ref="model_dnu_meeting_booking"/>
+            <field name="subject">XÃ¡c nháº­n Ä‘áº·t phÃ²ng: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.organizer_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #2c3e50;">XÃ¡c nháº­n Ä‘áº·t phÃ²ng há»p</h2>
+    
+    <p>Xin chÃ o <strong>${object.organizer_id.name}</strong>,</p>
+    
+    <p>YÃªu cáº§u Ä‘áº·t phÃ²ng cá»§a báº¡n Ä‘Ã£ Ä‘Æ°á»£c <strong>xÃ¡c nháº­n</strong>.</p>
+    
+    <div style="background-color: #ecf0f1; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>MÃ£ Ä‘áº·t phÃ²ng:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>PhÃ²ng há»p:</strong></td>
+                <td style="padding: 5px;">${object.room_id.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Chá»§ Ä‘á»:</strong></td>
+                <td style="padding: 5px;">${object.subject}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Thá»i gian:</strong></td>
+                <td style="padding: 5px;">
+                    ${format_datetime(object.start_datetime, dt_format='dd/MM/yyyy HH:mm')} - 
+                    ${format_datetime(object.end_datetime, dt_format='HH:mm')}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Sá»‘ ngÆ°á»i:</strong></td>
+                <td style="padding: 5px;">${object.num_attendees} ngÆ°á»i</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Vá»‹ trÃ­:</strong></td>
+                <td style="padding: 5px;">${object.room_id.location or 'N/A'}</td>
+            </tr>
+            % if object.meeting_type == 'online':
+            <tr>
+                <td style="padding: 5px;"><strong>Loáº¡i cuá»™c há»p:</strong></td>
+                <td style="padding: 5px;">Trá»±c tuyáº¿n (Online)</td>
+            </tr>
+            % endif
+            % if object.zoom_join_url:
+            <tr>
+                <td style="padding: 5px;"><strong>Link Zoom:</strong></td>
+                <td style="padding: 5px;">
+                    <a href="${object.zoom_join_url}" style="color: #2980b9;">${object.zoom_join_url}</a>
+                </td>
+            </tr>
+            % if object.zoom_password:
+            <tr>
+                <td style="padding: 5px;"><strong>Password Zoom:</strong></td>
+                <td style="padding: 5px;">${object.zoom_password}</td>
+            </tr>
+            % endif
+            % endif
+            % if object.google_calendar_link:
+            <tr>
+                <td style="padding: 5px;"><strong>Google Calendar:</strong></td>
+                <td style="padding: 5px;">
+                    <a href="${object.google_calendar_link}" style="color: #27ae60;">Xem trong Google Calendar</a>
+                </td>
+            </tr>
+            % endif
+        </table>
+    </div>
+    
+    % if object.attendee_ids:
+    <div style="margin: 20px 0;">
+        <strong>NgÆ°á»i tham dá»±:</strong>
+        <ul style="margin-top: 5px;">
+            % for attendee in object.attendee_ids:
+            <li>${attendee.name} (${attendee.work_email or 'KhÃ´ng cÃ³ email'})</li>
+            % endfor
+        </ul>
+    </div>
+    % endif
+    
+    % if object.description:
+    <p><strong>MÃ´ táº£:</strong><br/>
+    ${object.description}
+    </p>
+    % endif
+    
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.meeting.booking&amp;view_type=form" 
+           style="background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem chi tiáº¿t
+        </a>
+    </p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.<br/>
+        Náº¿u cÃ³ tháº¯c máº¯c, vui lÃ²ng liÃªn há»‡ bá»™ pháº­n quáº£n lÃ½ phÃ²ng há»p.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Booking Cancellation -->
+        <record id="email_template_booking_cancellation" model="mail.template">
+            <field name="name">Meeting Booking: Cancellation</field>
+            <field name="model_id" ref="model_dnu_meeting_booking"/>
+            <field name="subject">Há»§y Ä‘áº·t phÃ²ng: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.organizer_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #e74c3c;">ThÃ´ng bÃ¡o há»§y Ä‘áº·t phÃ²ng</h2>
+    
+    <p>Xin chÃ o <strong>${object.organizer_id.name}</strong>,</p>
+    
+    <p>Äáº·t phÃ²ng <strong>${object.name}</strong> Ä‘Ã£ bá»‹ <strong style="color: #e74c3c;">Há»¦Y</strong>.</p>
+    
+    <div style="background-color: #ffecec; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>PhÃ²ng há»p:</strong></td>
+                <td style="padding: 5px;">${object.room_id.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Thá»i gian:</strong></td>
+                <td style="padding: 5px;">
+                    ${format_datetime(object.start_datetime, dt_format='dd/MM/yyyy HH:mm')} - 
+                    ${format_datetime(object.end_datetime, dt_format='HH:mm')}
+                </td>
+            </tr>
+            % if object.cancellation_reason:
+            <tr>
+                <td style="padding: 5px;"><strong>LÃ½ do:</strong></td>
+                <td style="padding: 5px;">${object.cancellation_reason}</td>
+            </tr>
+            % endif
+        </table>
+    </div>
+    
+    <p>Náº¿u báº¡n cáº§n Ä‘áº·t phÃ²ng khÃ¡c, vui lÃ²ng truy cáº­p há»‡ thá»‘ng Ä‘á»ƒ táº¡o yÃªu cáº§u má»›i.</p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Booking Reminder -->
+        <record id="email_template_booking_reminder" model="mail.template">
+            <field name="name">Meeting Booking: Reminder</field>
+            <field name="model_id" ref="model_dnu_meeting_booking"/>
+            <field name="subject">Nháº¯c nhá»Ÿ: Cuá»™c há»p ${object.subject}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.organizer_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #f39c12;">â° Nháº¯c nhá»Ÿ cuá»™c há»p</h2>
+    
+    <p>Xin chÃ o <strong>${object.organizer_id.name}</strong>,</p>
+    
+    <p>Cuá»™c há»p cá»§a báº¡n sáº½ báº¯t Ä‘áº§u trong <strong>30 phÃºt ná»¯a</strong>.</p>
+    
+    <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>Chá»§ Ä‘á»:</strong></td>
+                <td style="padding: 5px;">${object.subject}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>PhÃ²ng:</strong></td>
+                <td style="padding: 5px;">${object.room_id.name} - ${object.room_id.location or ''}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Thá»i gian:</strong></td>
+                <td style="padding: 5px;">
+                    ${format_datetime(object.start_datetime, dt_format='HH:mm')} - 
+                    ${format_datetime(object.end_datetime, dt_format='HH:mm')}
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <p>Äá»«ng quÃªn chuáº©n bá»‹ tÃ i liá»‡u vÃ  Ä‘áº¿n Ä‘Ãºng giá»!</p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email nháº¯c nhá»Ÿ tá»± Ä‘á»™ng.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Asset Lending Approved -->
+        <record id="email_template_lending_approved" model="mail.template">
+            <field name="name">Asset Lending: Approved</field>
+            <field name="model_id" ref="model_dnu_asset_lending"/>
+            <field name="subject">YÃªu cáº§u mÆ°á»£n tÃ i sáº£n Ä‘Ã£ Ä‘Æ°á»£c phÃª duyá»‡t: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.borrower_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #27ae60;">âœ… YÃªu cáº§u mÆ°á»£n tÃ i sáº£n Ä‘Ã£ Ä‘Æ°á»£c phÃª duyá»‡t</h2>
+    
+    <p>Xin chÃ o <strong>${object.borrower_id.name}</strong>,</p>
+    
+    <p>YÃªu cáº§u mÆ°á»£n tÃ i sáº£n cá»§a báº¡n Ä‘Ã£ Ä‘Æ°á»£c <strong style="color: #27ae60;">PHÃŠ DUYá»†T</strong>.</p>
+    
+    <div style="background-color: #d4edda; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>MÃ£ phiáº¿u mÆ°á»£n:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>TÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.asset_id.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NgÃ y mÆ°á»£n:</strong></td>
+                <td style="padding: 5px;">${format_datetime(object.borrow_date, dt_format='dd/MM/yyyy HH:mm')}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NgÃ y tráº£ dá»± kiáº¿n:</strong></td>
+                <td style="padding: 5px;">${format_datetime(object.expected_return_date, dt_format='dd/MM/yyyy HH:mm')}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <p>Vui lÃ²ng Ä‘áº¿n nháº­n tÃ i sáº£n vÃ  tráº£ Ä‘Ãºng háº¡n.</p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Asset Lending Overdue -->
+        <record id="email_template_lending_overdue" model="mail.template">
+            <field name="name">Asset Lending: Overdue Warning</field>
+            <field name="model_id" ref="model_dnu_asset_lending"/>
+            <field name="subject">âš ï¸ Cáº¢NH BÃO: TÃ i sáº£n mÆ°á»£n Ä‘Ã£ quÃ¡ háº¡n - ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.borrower_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #e74c3c;">âš ï¸ Cáº¢NH BÃO: TÃ i sáº£n mÆ°á»£n Ä‘Ã£ quÃ¡ háº¡n</h2>
+    
+    <p>Xin chÃ o <strong>${object.borrower_id.name}</strong>,</p>
+    
+    <p>TÃ i sáº£n báº¡n mÆ°á»£n Ä‘Ã£ <strong style="color: #e74c3c;">QUÃ Háº N TRáº¢</strong>.</p>
+    
+    <div style="background-color: #ffecec; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #e74c3c;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>MÃ£ phiáº¿u mÆ°á»£n:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>TÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.asset_id.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NgÃ y tráº£ dá»± kiáº¿n:</strong></td>
+                <td style="padding: 5px; color: #e74c3c;"><strong>${format_datetime(object.expected_return_date, dt_format='dd/MM/yyyy HH:mm')}</strong></td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Sá»‘ ngÃ y quÃ¡ háº¡n:</strong></td>
+                <td style="padding: 5px; color: #e74c3c;"><strong>${object.overdue_days} ngÃ y</strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <p><strong>Vui lÃ²ng tráº£ tÃ i sáº£n NGAY Láº¬P Tá»¨C Ä‘á»ƒ trÃ¡nh áº£nh hÆ°á»Ÿng Ä‘áº¿n cÃ´ng viá»‡c cá»§a ngÆ°á»i khÃ¡c.</strong></p>
+    
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.asset.lending&amp;view_type=form" 
+           style="background-color: #e74c3c; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem chi tiáº¿t phiáº¿u mÆ°á»£n
+        </a>
+    </p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email cáº£nh bÃ¡o tá»± Ä‘á»™ng.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Asset Lending Return Reminder -->
+        <record id="email_template_lending_return_reminder" model="mail.template">
+            <field name="name">Asset Lending: Return Reminder</field>
+            <field name="model_id" ref="model_dnu_asset_lending"/>
+            <field name="subject">Nháº¯c nhá»Ÿ: Háº¡n tráº£ tÃ i sáº£n sáº¯p Ä‘áº¿n - ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.borrower_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #f39c12;">â° Nháº¯c nhá»Ÿ tráº£ tÃ i sáº£n</h2>
+    
+    <p>Xin chÃ o <strong>${object.borrower_id.name}</strong>,</p>
+    
+    <p>ÄÃ¢y lÃ  lá»i nháº¯c nhá»Ÿ ráº±ng tÃ i sáº£n báº¡n Ä‘ang mÆ°á»£n sáº½ Ä‘áº¿n háº¡n tráº£ <strong>vÃ o ngÃ y mai</strong>.</p>
+    
+    <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>MÃ£ phiáº¿u mÆ°á»£n:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>TÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.asset_id.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NgÃ y tráº£ dá»± kiáº¿n:</strong></td>
+                <td style="padding: 5px;"><strong>${format_datetime(object.expected_return_date, dt_format='dd/MM/yyyy HH:mm')}</strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <p>Vui lÃ²ng chuáº©n bá»‹ tráº£ tÃ i sáº£n Ä‘Ãºng háº¡n.</p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email nháº¯c nhá»Ÿ tá»± Ä‘á»™ng.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- ====== AUTOMATION EMAIL TEMPLATES ====== -->
+
+        <!-- Email Template: Escalation to Manager (Level 2) -->
+        <record id="email_template_lending_escalation_manager" model="mail.template">
+            <field name="name">Asset Lending: Escalation to Manager</field>
+            <field name="model_id" ref="model_dnu_asset_lending"/>
+            <field name="subject">âš ï¸ [ESCALATION] NhÃ¢n viÃªn cÃ³ tÃ i sáº£n quÃ¡ háº¡n - ${object.borrower_name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${ctx.get('manager_email', '') or object.borrower_id.parent_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #e67e22;">âš ï¸ THÃ”NG BÃO ESCALATION - TÃ€I Sáº¢N QUÃ Háº N</h2>
+    
+    <p>KÃ­nh gá»­i Quáº£n lÃ½,</p>
+    
+    <p>ÄÃ¢y lÃ  thÃ´ng bÃ¡o escalation vá» tÃ¬nh tráº¡ng <strong style="color: #e74c3c;">tÃ i sáº£n mÆ°á»£n quÃ¡ háº¡n</strong> cá»§a nhÃ¢n viÃªn thuá»™c phÃ²ng ban báº¡n quáº£n lÃ½.</p>
+    
+    <div style="background-color: #fdf2e9; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #e67e22;">
+        <h4 style="margin-top: 0;">ThÃ´ng tin chi tiáº¿t:</h4>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>NhÃ¢n viÃªn:</strong></td>
+                <td style="padding: 5px;">${object.borrower_name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>PhÃ²ng ban:</strong></td>
+                <td style="padding: 5px;">${object.borrower_id.department_id.name if object.borrower_id and object.borrower_id.department_id else 'N/A'}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>MÃ£ phiáº¿u mÆ°á»£n:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>TÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.asset_id.name} (${object.asset_id.code})</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Háº¡n tráº£:</strong></td>
+                <td style="padding: 5px; color: #e74c3c;"><strong>${format_datetime(object.date_expected_return, dt_format='dd/MM/yyyy HH:mm')}</strong></td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Sá»‘ ngÃ y quÃ¡ háº¡n:</strong></td>
+                <td style="padding: 5px; color: #e74c3c;"><strong>${object.overdue_days} ngÃ y</strong></td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Cáº¥p escalation:</strong></td>
+                <td style="padding: 5px;"><strong>Cáº¥p 2 - ThÃ´ng bÃ¡o Quáº£n lÃ½</strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <p><strong>YÃªu cáº§u:</strong> Vui lÃ²ng nháº¯c nhá»Ÿ nhÃ¢n viÃªn <strong>${object.borrower_name}</strong> tráº£ tÃ i sáº£n ngay láº­p tá»©c.</p>
+    
+    <p>Náº¿u tÃ¬nh tráº¡ng nÃ y tiáº¿p tá»¥c, há»‡ thá»‘ng sáº½ tá»± Ä‘á»™ng escalate lÃªn Ban GiÃ¡m Ä‘á»‘c / PhÃ²ng HCNS.</p>
+    
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.asset.lending&amp;view_type=form" 
+           style="background-color: #e67e22; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem chi tiáº¿t
+        </a>
+    </p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email thÃ´ng bÃ¡o tá»± Ä‘á»™ng tá»« há»‡ thá»‘ng quáº£n lÃ½ tÃ i sáº£n.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Escalation Level 3 (HR/Director) -->
+        <record id="email_template_lending_escalation_hr" model="mail.template">
+            <field name="name">Asset Lending: Critical Escalation (HR/Director)</field>
+            <field name="model_id" ref="model_dnu_asset_lending"/>
+            <field name="subject">ðŸš¨ [KHáº¨N Cáº¤P] TÃ i sáº£n quÃ¡ háº¡n nghiÃªm trá»ng - ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #c0392b;">ðŸš¨ Cáº¢NH BÃO KHáº¨N Cáº¤P - TÃ€I Sáº¢N QUÃ Háº N NGHIÃŠM TRá»ŒNG</h2>
+    
+    <p>KÃ­nh gá»­i Ban lÃ£nh Ä‘áº¡o / PhÃ²ng HCNS,</p>
+    
+    <p>ÄÃ¢y lÃ  thÃ´ng bÃ¡o <strong style="color: #c0392b;">ESCALATION Cáº¤P 3</strong> vá» tÃ¬nh tráº¡ng tÃ i sáº£n quÃ¡ háº¡n nghiÃªm trá»ng cáº§n xá»­ lÃ½ kháº©n cáº¥p.</p>
+    
+    <div style="background-color: #fdedec; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #c0392b;">
+        <h4 style="margin-top: 0; color: #c0392b;">âš ï¸ THÃ”NG TIN KHáº¨N Cáº¤P:</h4>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>NgÆ°á»i mÆ°á»£n:</strong></td>
+                <td style="padding: 5px;">${object.borrower_name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>PhÃ²ng ban:</strong></td>
+                <td style="padding: 5px;">${object.borrower_id.department_id.name if object.borrower_id and object.borrower_id.department_id else 'N/A'}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>TÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.asset_id.name} (${object.asset_id.code})</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>GiÃ¡ trá»‹ tÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${'{:,.0f}'.format(object.asset_id.purchase_value or 0)} VNÄ</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Sá»‘ ngÃ y quÃ¡ háº¡n:</strong></td>
+                <td style="padding: 5px; color: #c0392b; font-size: 18px;"><strong>${object.overdue_days} NGÃ€Y</strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <h4>Lá»‹ch sá»­ escalation:</h4>
+    <ul>
+        <li>NgÃ y 1: Nháº¯c nhá»Ÿ ngÆ°á»i mÆ°á»£n</li>
+        <li>NgÃ y 3: ThÃ´ng bÃ¡o Quáº£n lÃ½ phÃ²ng ban</li>
+        <li><strong>NgÃ y 7+: ThÃ´ng bÃ¡o Ban lÃ£nh Ä‘áº¡o / HCNS (HIá»†N Táº I)</strong></li>
+    </ul>
+    
+    <p><strong style="color: #c0392b;">Äá» xuáº¥t xá»­ lÃ½:</strong></p>
+    <ul>
+        <li>LiÃªn há»‡ trá»±c tiáº¿p vá»›i nhÃ¢n viÃªn Ä‘á»ƒ thu há»“i tÃ i sáº£n</li>
+        <li>Xem xÃ©t cÃ¡c biá»‡n phÃ¡p ká»· luáº­t phÃ¹ há»£p</li>
+        <li>Kiá»ƒm tra láº¡i quy trÃ¬nh mÆ°á»£n tÃ i sáº£n</li>
+    </ul>
+    
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.asset.lending&amp;view_type=form" 
+           style="background-color: #c0392b; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem vÃ  xá»­ lÃ½
+        </a>
+    </p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email cáº£nh bÃ¡o kháº©n cáº¥p tá»± Ä‘á»™ng tá»« há»‡ thá»‘ng quáº£n lÃ½ tÃ i sáº£n.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Warranty Expiry Reminder -->
+        <record id="email_template_warranty_expiry" model="mail.template">
+            <field name="name">Asset: Warranty Expiry Reminder</field>
+            <field name="model_id" ref="model_dnu_asset"/>
+            <field name="subject">â° Báº£o hÃ nh sáº¯p háº¿t háº¡n: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #f39c12;">â° Nháº¯c nhá»Ÿ: Báº£o hÃ nh sáº¯p háº¿t háº¡n</h2>
+    
+    <p>Xin chÃ o,</p>
+    
+    <p>TÃ i sáº£n sau Ä‘Ã¢y sáº¯p háº¿t háº¡n báº£o hÃ nh:</p>
+    
+    <div style="background-color: #fef9e7; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #f39c12;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>TÃªn tÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>MÃ£ tÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.code}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Danh má»¥c:</strong></td>
+                <td style="padding: 5px;">${object.category_id.name if object.category_id else 'N/A'}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NgÃ y háº¿t báº£o hÃ nh:</strong></td>
+                <td style="padding: 5px; color: #e67e22;"><strong>${format_date(object.warranty_expiry)}</strong></td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NhÃ  cung cáº¥p:</strong></td>
+                <td style="padding: 5px;">${object.supplier_id.name if object.supplier_id else 'N/A'}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <p><strong>Khuyáº¿n nghá»‹:</strong></p>
+    <ul>
+        <li>Kiá»ƒm tra tÃ¬nh tráº¡ng tÃ i sáº£n trÆ°á»›c khi háº¿t báº£o hÃ nh</li>
+        <li>LiÃªn há»‡ nhÃ  cung cáº¥p náº¿u cáº§n sá»­a chá»¯a/thay tháº¿</li>
+        <li>CÃ¢n nháº¯c gia háº¡n báº£o hÃ nh hoáº·c mua há»£p Ä‘á»“ng báº£o trÃ¬</li>
+    </ul>
+    
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.asset&amp;view_type=form" 
+           style="background-color: #f39c12; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem chi tiáº¿t tÃ i sáº£n
+        </a>
+    </p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email nháº¯c nhá»Ÿ tá»± Ä‘á»™ng tá»« há»‡ thá»‘ng quáº£n lÃ½ tÃ i sáº£n.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Asset Return Request (Offboarding) -->
+        <record id="email_template_asset_return_offboarding" model="mail.template">
+            <field name="name">Asset: Return Request (Offboarding)</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="subject">ðŸ”„ YÃªu cáº§u thu há»“i tÃ i sáº£n: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #3498db;">ðŸ”„ YÃªu cáº§u thu há»“i tÃ i sáº£n</h2>
+    
+    <p>Xin chÃ o,</p>
+    
+    <p>NhÃ¢n viÃªn <strong>${object.name}</strong> Ä‘ang chuáº©n bá»‹ nghá»‰ viá»‡c/chuyá»ƒn cÃ´ng tÃ¡c.</p>
+    
+    <p>Vui lÃ²ng tiáº¿n hÃ nh thu há»“i cÃ¡c tÃ i sáº£n Ä‘ang Ä‘Æ°á»£c giao cho nhÃ¢n viÃªn nÃ y:</p>
+    
+    <div style="background-color: #ebf5fb; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db;">
+        <h4 style="margin-top: 0;">ThÃ´ng tin nhÃ¢n viÃªn:</h4>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>Há» tÃªn:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>PhÃ²ng ban:</strong></td>
+                <td style="padding: 5px;">${object.department_id.name if object.department_id else 'N/A'}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Sá»‘ tÃ i sáº£n cáº§n thu há»“i:</strong></td>
+                <td style="padding: 5px;"><strong>${object.pending_asset_return_count}</strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <p><strong>CÃ¡c bÆ°á»›c cáº§n thá»±c hiá»‡n:</strong></p>
+    <ol>
+        <li>LiÃªn há»‡ vá»›i nhÃ¢n viÃªn Ä‘á»ƒ lÃªn lá»‹ch thu há»“i</li>
+        <li>Kiá»ƒm tra tÃ¬nh tráº¡ng tÃ i sáº£n khi nháº­n láº¡i</li>
+        <li>Cáº­p nháº­t tráº¡ng thÃ¡i trÃªn há»‡ thá»‘ng</li>
+        <li>HoÃ n táº¥t biÃªn báº£n bÃ n giao</li>
+    </ol>
+    
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=hr.employee&amp;view_type=form" 
+           style="background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem chi tiáº¿t nhÃ¢n viÃªn
+        </a>
+    </p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email thÃ´ng bÃ¡o tá»± Ä‘á»™ng tá»« há»‡ thá»‘ng quáº£n lÃ½ tÃ i sáº£n.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Missing Asset Alert -->
+        <record id="email_template_missing_asset" model="mail.template">
+            <field name="name">Asset: Missing Alert</field>
+            <field name="model_id" ref="model_dnu_asset"/>
+            <field name="subject">ðŸ”´ Cáº¢NH BÃO: TÃ i sáº£n máº¥t - ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #c0392b;">ðŸ”´ Cáº¢NH BÃO: TÃ€I Sáº¢N ÄÆ¯á»¢C ÄÃNH Dáº¤U Máº¤T</h2>
+    
+    <p>Xin chÃ o,</p>
+    
+    <p>TÃ i sáº£n sau Ä‘Ã¢y Ä‘Ã£ Ä‘Æ°á»£c Ä‘Ã¡nh dáº¥u lÃ  <strong style="color: #c0392b;">Máº¤T</strong> sau nhiá»u Ä‘á»£t kiá»ƒm kÃª khÃ´ng tÃ¬m tháº¥y:</p>
+    
+    <div style="background-color: #fdedec; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #c0392b;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>TÃªn tÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>MÃ£ tÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.code}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>GiÃ¡ trá»‹:</strong></td>
+                <td style="padding: 5px;">${'{:,.0f}'.format(object.purchase_value or 0)} VNÄ</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NgÆ°á»i Ä‘Æ°á»£c gÃ¡n cuá»‘i:</strong></td>
+                <td style="padding: 5px;">${object.assigned_to.name if object.assigned_to else 'N/A'}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Vá»‹ trÃ­ cuá»‘i:</strong></td>
+                <td style="padding: 5px;">${object.location or 'N/A'}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Sá»‘ Ä‘á»£t kiá»ƒm kÃª khÃ´ng tháº¥y:</strong></td>
+                <td style="padding: 5px; color: #c0392b;"><strong>${object.missing_inventory_count}</strong></td>
+            </tr>
+        </table>
+    </div>
+    
+    <p><strong>YÃªu cáº§u:</strong></p>
+    <ul>
+        <li>Tiáº¿n hÃ nh Ä‘iá»u tra tÃ¬m kiáº¿m tÃ i sáº£n</li>
+        <li>LiÃªn há»‡ vá»›i ngÆ°á»i Ä‘Æ°á»£c gÃ¡n cuá»‘i cÃ¹ng</li>
+        <li>Kiá»ƒm tra cÃ¡c vá»‹ trÃ­ cÃ³ thá»ƒ</li>
+        <li>Láº­p biÃªn báº£n náº¿u xÃ¡c nháº­n máº¥t</li>
+    </ul>
+    
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.asset&amp;view_type=form" 
+           style="background-color: #c0392b; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem vÃ  xá»­ lÃ½
+        </a>
+    </p>
+    
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email cáº£nh bÃ¡o tá»± Ä‘á»™ng tá»« há»‡ thá»‘ng quáº£n lÃ½ tÃ i sáº£n.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- ==================== ASSET HANDOVER EMAIL TEMPLATES ==================== -->
+
+        <record id="email_template_handover_signature" model="mail.template">
+            <field name="name">Asset Handover: Signature Request</field>
+            <field name="model_id" ref="model_dnu_asset_handover"/>
+            <field name="subject">ðŸ–Šï¸ YÃªu cáº§u kÃ½ biÃªn báº£n bÃ n giao: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object._get_notification_email_to('pending_signature')|safe}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #3498db;">ðŸ–Šï¸ YÃªu cáº§u kÃ½ biÃªn báº£n bÃ n giao tÃ i sáº£n</h2>
+
+    <p>Xin chÃ o,</p>
+
+    <p>BiÃªn báº£n bÃ n giao sau Ä‘Ã¢y Ä‘ang á»Ÿ tráº¡ng thÃ¡i <strong>Chá» kÃ½</strong> vÃ  cáº§n báº¡n kÃ½ xÃ¡c nháº­n:</p>
+
+    <div style="background-color: #ebf5fb; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #3498db;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>Sá»‘ biÃªn báº£n:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Loáº¡i biÃªn báº£n:</strong></td>
+                <td style="padding: 5px;">${dict(object._fields['handover_type'].selection).get(object.handover_type)}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>TÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.asset_name or (object.asset_id and object.asset_id.name) or ''}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NgÃ y bÃ n giao:</strong></td>
+                <td style="padding: 5px;">${format_datetime(object.handover_date, dt_format='dd/MM/yyyy HH:mm')}</td>
+            </tr>
+        </table>
+    </div>
+
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.asset.handover&amp;view_type=form"
+           style="background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Má»Ÿ biÃªn báº£n Ä‘á»ƒ kÃ½
+        </a>
+    </p>
+
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <record id="email_template_handover_signed" model="mail.template">
+            <field name="name">Asset Handover: Signed</field>
+            <field name="model_id" ref="model_dnu_asset_handover"/>
+            <field name="subject">âœ… BiÃªn báº£n Ä‘Ã£ kÃ½: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object._get_notification_email_to('signed')|safe}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #27ae60;">âœ… BiÃªn báº£n bÃ n giao Ä‘Ã£ kÃ½</h2>
+
+    <p>Xin chÃ o,</p>
+
+    <p>BiÃªn báº£n bÃ n giao <strong>${object.name}</strong> Ä‘Ã£ Ä‘Æ°á»£c kÃ½ Ä‘áº§y Ä‘á»§.</p>
+
+    <div style="background-color: #d4edda; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #27ae60;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>TÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.asset_name or (object.asset_id and object.asset_id.name) or ''}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NgÆ°á»i nháº­n:</strong></td>
+                <td style="padding: 5px;">${object.nhan_vien_id and object.nhan_vien_id.ho_va_ten or ''}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NgÆ°á»i giao:</strong></td>
+                <td style="padding: 5px;">${object.deliverer_id and object.deliverer_id.ho_va_ten or ''}</td>
+            </tr>
+        </table>
+    </div>
+
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.asset.handover&amp;view_type=form"
+           style="background-color: #27ae60; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem biÃªn báº£n
+        </a>
+    </p>
+
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <record id="email_template_handover_completed" model="mail.template">
+            <field name="name">Asset Handover: Completed</field>
+            <field name="model_id" ref="model_dnu_asset_handover"/>
+            <field name="subject">ðŸ BiÃªn báº£n Ä‘Ã£ hoÃ n thÃ nh: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object._get_notification_email_to('completed')|safe}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #8e44ad;">ðŸ BiÃªn báº£n bÃ n giao Ä‘Ã£ hoÃ n thÃ nh</h2>
+
+    <p>Xin chÃ o,</p>
+
+    <p>BiÃªn báº£n bÃ n giao <strong>${object.name}</strong> Ä‘Ã£ chuyá»ƒn sang tráº¡ng thÃ¡i <strong>HoÃ n thÃ nh</strong>.</p>
+
+    <div style="background-color: #f5eef8; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #8e44ad;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>TÃ i sáº£n:</strong></td>
+                <td style="padding: 5px;">${object.asset_name or (object.asset_id and object.asset_id.name) or ''}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>ÄÆ¡n vá»‹:</strong></td>
+                <td style="padding: 5px;">${object.don_vi_id and object.don_vi_id.ten_don_vi or ''}</td>
+            </tr>
+            % if object.van_ban_id:
+            <tr>
+                <td style="padding: 5px;"><strong>VÄƒn báº£n Ä‘i:</strong></td>
+                <td style="padding: 5px;">${object.van_ban_id.so_van_ban_di or ''} - ${object.van_ban_id.ten_van_ban or ''}</td>
+            </tr>
+            % endif
+        </table>
+    </div>
+
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.asset.handover&amp;view_type=form"
+           style="background-color: #8e44ad; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem biÃªn báº£n
+        </a>
+    </p>
+
+    <p style="color: #7f8c8d; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- ==================== MEETING BOOKING EMAIL TEMPLATES ==================== -->
+        
+        <!-- Email Template: Meeting Reminder -->
+        <record id="email_template_meeting_reminder" model="mail.template">
+            <field name="name">Meeting Booking: Reminder</field>
+            <field name="model_id" ref="model_dnu_meeting_booking"/>
+            <field name="subject">â° Nháº¯c lá»‹ch há»p: ${object.subject} - ${format_datetime(object.start_datetime, dt_format='HH:mm')}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.organizer_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; background-color: #fffbea;">
+    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
+        <h2 style="color: white; margin: 0;">â° NHáº®C Lá»ŠCH Há»ŒP</h2>
+        <p style="color: white; margin: 5px 0 0 0; font-size: 14px;">Cuá»™c há»p cá»§a báº¡n sáº¯p diá»…n ra!</p>
+    </div>
+    
+    <div style="background: white; padding: 20px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <p style="font-size: 16px; margin-bottom: 20px;">Xin chÃ o <strong>${object.organizer_id.name}</strong>,</p>
+        
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+            <h3 style="margin: 0; font-size: 18px;">${object.subject}</h3>
+            <p style="margin: 10px 0 0 0; font-size: 24px; font-weight: bold;">
+                ${format_datetime(object.start_datetime, dt_format='HH:mm')} - ${format_datetime(object.end_datetime, dt_format='HH:mm')}
+            </p>
+            <p style="margin: 5px 0 0 0; font-size: 14px;">
+                ðŸ“… ${format_datetime(object.start_datetime, dt_format='dd/MM/yyyy (EEE)')}
+            </p>
+        </div>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="padding: 8px; width: 30%;"><strong>ðŸ“ Äá»‹a Ä‘iá»ƒm:</strong></td>
+                    <td style="padding: 8px;">${object.room_id.name}
+                        % if object.room_id.location:
+                        - ${object.room_id.location}
+                        % endif
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>ðŸ‘¥ Sá»‘ ngÆ°á»i:</strong></td>
+                    <td style="padding: 8px;">${object.num_attendees} ngÆ°á»i</td>
+                </tr>
+                % if object.meeting_type == 'online':
+                <tr>
+                    <td style="padding: 8px;"><strong>ðŸ’» Loáº¡i:</strong></td>
+                    <td style="padding: 8px;"><span style="background: #10b981; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px;">ONLINE</span></td>
+                </tr>
+                % endif
+            </table>
+        </div>
+        
+        % if object.zoom_join_url:
+        <div style="background: linear-gradient(135deg, #2684FF 0%, #0747A6 100%); padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+            <p style="color: white; margin: 0 0 10px 0; font-size: 14px;">ðŸ”— Link há»p Zoom</p>
+            <a href="${object.zoom_join_url}" 
+               style="background-color: white; color: #0747A6; padding: 12px 30px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px;">
+                Tham gia há»p ngay
+            </a>
+            % if object.zoom_password:
+            <p style="color: white; margin: 10px 0 0 0; font-size: 13px;">ðŸ”‘ Password: <strong>${object.zoom_password}</strong></p>
+            % endif
+        </div>
+        % endif
+        
+        % if object.google_calendar_link:
+        <p style="text-align: center; margin: 15px 0;">
+            <a href="${object.google_calendar_link}" style="color: #27ae60; text-decoration: none;">
+                ðŸ“… Xem trong Google Calendar
+            </a>
+        </p>
+        % endif
+        
+        % if object.description:
+        <div style="border-left: 4px solid #667eea; padding-left: 15px; margin: 20px 0;">
+            <strong>ðŸ“ Ná»™i dung cuá»™c há»p:</strong>
+            <p style="margin: 5px 0;">${object.description}</p>
+        </div>
+        % endif
+        
+        <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; margin: 20px 0; border-radius: 4px;">
+            <strong style="color: #d97706;">âš ï¸ LÆ°u Ã½:</strong>
+            <p style="margin: 5px 0; color: #92400e;">Vui lÃ²ng chuáº©n bá»‹ vÃ  tham gia Ä‘Ãºng giá». Náº¿u khÃ´ng thá»ƒ tham dá»±, vui lÃ²ng thÃ´ng bÃ¡o sá»›m.</p>
+        </div>
+        
+        <p style="text-align: center; margin-top: 25px;">
+            <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.meeting.booking&amp;view_type=form" 
+               style="background-color: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold;">
+                Xem chi tiáº¿t Ä‘áº§y Ä‘á»§
+            </a>
+        </p>
+    </div>
+    
+    <p style="color: #9ca3af; font-size: 12px; text-align: center; margin-top: 20px;">
+        ÄÃ¢y lÃ  email nháº¯c lá»‹ch tá»± Ä‘á»™ng. Email nÃ y Ä‘Æ°á»£c gá»­i 30 phÃºt trÆ°á»›c giá» há»p.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Meeting Update Notification -->
+        <record id="email_template_meeting_update" model="mail.template">
+            <field name="name">Meeting Booking: Update Notification</field>
+            <field name="model_id" ref="model_dnu_meeting_booking"/>
+            <field name="subject">ðŸ”„ Cáº­p nháº­t lá»‹ch há»p: ${object.subject}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.organizer_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
+        <h2 style="color: white; margin: 0;">ðŸ”„ Lá»ŠCH Há»ŒP CÃ“ THAY Äá»”I</h2>
+    </div>
+    
+    <div style="background: white; padding: 20px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <p>Xin chÃ o <strong>${object.organizer_id.name}</strong>,</p>
+        
+        <p>Lá»‹ch há»p sau Ä‘Ã¢y <strong style="color: #f59e0b;">Ä‘Ã£ Ä‘Æ°á»£c cáº­p nháº­t</strong>. Vui lÃ²ng kiá»ƒm tra thÃ´ng tin má»›i:</p>
+        
+        <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+            <strong style="color: #d97706;">âš ï¸ ÄÃƒ CÃ“ THAY Äá»”I - VUI LÃ’NG XEM Ká»¸ THÃ”NG TIN BÃŠN DÆ¯á»šI</strong>
+        </div>
+        
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="padding: 8px;"><strong>MÃ£ Ä‘áº·t phÃ²ng:</strong></td>
+                    <td style="padding: 8px;">${object.name}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>Chá»§ Ä‘á»:</strong></td>
+                    <td style="padding: 8px;">${object.subject}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>Thá»i gian:</strong></td>
+                    <td style="padding: 8px;">
+                        ${format_datetime(object.start_datetime, dt_format='dd/MM/yyyy HH:mm')} - 
+                        ${format_datetime(object.end_datetime, dt_format='HH:mm')}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>PhÃ²ng há»p:</strong></td>
+                    <td style="padding: 8px;">${object.room_id.name}
+                        % if object.room_id.location:
+                        - ${object.room_id.location}
+                        % endif
+                    </td>
+                </tr>
+                % if object.meeting_type == 'online':
+                <tr>
+                    <td style="padding: 8px;"><strong>Loáº¡i cuá»™c há»p:</strong></td>
+                    <td style="padding: 8px;"><span style="background: #10b981; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px;">ONLINE</span></td>
+                </tr>
+                % endif
+            </table>
+        </div>
+        
+        % if object.zoom_join_url:
+        <div style="background-color: #dbeafe; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <strong>ðŸ”— Link há»p Zoom:</strong><br/>
+            <a href="${object.zoom_join_url}" style="color: #2563eb; word-break: break-all;">${object.zoom_join_url}</a>
+            % if object.zoom_password:
+            <p style="margin: 5px 0 0 0;"><strong>ðŸ”‘ Password:</strong> ${object.zoom_password}</p>
+            % endif
+        </div>
+        % endif
+        
+        % if object.google_calendar_link:
+        <p style="text-align: center; margin: 15px 0;">
+            <a href="${object.google_calendar_link}" 
+               style="background-color: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                ðŸ“… Cáº­p nháº­t trong Google Calendar
+            </a>
+        </p>
+        % endif
+        
+        % if object.description:
+        <div style="margin: 20px 0;">
+            <strong>ðŸ“ MÃ´ táº£:</strong>
+            <p style="margin: 5px 0;">${object.description}</p>
+        </div>
+        % endif
+        
+        % if object.attendee_ids:
+        <div style="margin: 20px 0;">
+            <strong>ðŸ‘¥ NgÆ°á»i tham dá»±:</strong>
+            <ul style="margin-top: 5px;">
+                % for attendee in object.attendee_ids:
+                <li>${attendee.name}</li>
+                % endfor
+            </ul>
+        </div>
+        % endif
+        
+        <p style="text-align: center; margin-top: 25px;">
+            <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.meeting.booking&amp;view_type=form" 
+               style="background-color: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold;">
+                Xem chi tiáº¿t
+            </a>
+        </p>
+    </div>
+    
+    <p style="color: #9ca3af; font-size: 12px; text-align: center; margin-top: 20px;">
+        Email thÃ´ng bÃ¡o tá»± Ä‘á»™ng khi cÃ³ thay Ä‘á»•i lá»‹ch há»p.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Booking Created -->
+        <record id="email_template_booking_created" model="mail.template">
+            <field name="name">Meeting Booking: Created</field>
+            <field name="model_id" ref="model_dnu_meeting_booking"/>
+            <field name="subject">ðŸ“ YÃªu cáº§u Ä‘áº·t phÃ²ng Ä‘Ã£ Ä‘Æ°á»£c táº¡o: ${object.subject or object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.organizer_id.work_email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #1f2937;">ðŸ“ YÃªu cáº§u Ä‘áº·t phÃ²ng Ä‘Ã£ Ä‘Æ°á»£c táº¡o</h2>
+
+    <p>Xin chÃ o <strong>${object.organizer_id.name}</strong>,</p>
+
+    <p>YÃªu cáº§u Ä‘áº·t phÃ²ng cá»§a báº¡n Ä‘Ã£ Ä‘Æ°á»£c táº¡o thÃ nh cÃ´ng vÃ  Ä‘ang chá» xá»­ lÃ½.</p>
+
+    <div style="background-color: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>MÃ£ Ä‘áº·t phÃ²ng:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Chá»§ Ä‘á»:</strong></td>
+                <td style="padding: 5px;">${object.subject}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Thá»i gian:</strong></td>
+                <td style="padding: 5px;">
+                    ${format_datetime(object.start_datetime, dt_format='dd/MM/yyyy HH:mm')} -
+                    ${format_datetime(object.end_datetime, dt_format='HH:mm')}
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>PhÃ²ng há»p:</strong></td>
+                <td style="padding: 5px;">${object.room_id.name}</td>
+            </tr>
+        </table>
+    </div>
+
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=dnu.meeting.booking&amp;view_type=form"
+           style="background-color: #2563eb; color: white; padding: 10px 18px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem chi tiáº¿t
+        </a>
+    </p>
+
+    <p style="color: #6b7280; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: VÄƒn báº£n Ä‘áº¿n cáº§n xá»­ lÃ½ -->
+        <record id="email_template_van_ban_den_processing" model="mail.template">
+            <field name="name">VÄƒn báº£n Ä‘áº¿n: Cáº§n xá»­ lÃ½</field>
+            <field name="model_id" ref="model_van_ban_den"/>
+            <field name="subject">ðŸ“Œ VÄƒn báº£n Ä‘áº¿n cáº§n xá»­ lÃ½: ${object.ten_van_ban}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.handler_employee_id.email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #dc2626;">ðŸ“Œ VÄƒn báº£n Ä‘áº¿n cáº§n xá»­ lÃ½</h2>
+
+    <p>Xin chÃ o <strong>${object.handler_employee_id.ho_va_ten}</strong>,</p>
+
+    <p>Báº¡n Ä‘Æ°á»£c giao xá»­ lÃ½ vÄƒn báº£n Ä‘áº¿n sau:</p>
+
+    <div style="background-color: #fef2f2; padding: 15px; border-radius: 6px; margin: 20px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>Sá»‘ VB Ä‘áº¿n:</strong></td>
+                <td style="padding: 5px;">${object.so_van_ban_den}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>TÃªn vÄƒn báº£n:</strong></td>
+                <td style="padding: 5px;">${object.ten_van_ban}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>NÆ¡i gá»­i Ä‘áº¿n:</strong></td>
+                <td style="padding: 5px;">${object.noi_gui_den or ''}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Háº¡n xá»­ lÃ½:</strong></td>
+                <td style="padding: 5px;">${object.due_date or 'N/A'}</td>
+            </tr>
+        </table>
+    </div>
+
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=van_ban_den&amp;view_type=form"
+           style="background-color: #dc2626; color: white; padding: 10px 18px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem vÄƒn báº£n
+        </a>
+    </p>
+
+    <p style="color: #6b7280; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Task Due -->
+        <record id="email_template_van_ban_task_due" model="mail.template">
+            <field name="name">VÄƒn báº£n: CÃ´ng viá»‡c Ä‘áº¿n háº¡n</field>
+            <field name="model_id" ref="model_van_ban_task"/>
+            <field name="subject">â° CÃ´ng viá»‡c Ä‘áº¿n háº¡n hÃ´m nay: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.employee_id.email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #f59e0b;">â° CÃ´ng viá»‡c Ä‘áº¿n háº¡n hÃ´m nay</h2>
+
+    <p>Xin chÃ o <strong>${object.employee_id.ho_va_ten}</strong>,</p>
+
+    <p>CÃ´ng viá»‡c sau Ä‘áº¿n háº¡n xá»­ lÃ½ hÃ´m nay:</p>
+
+    <div style="background-color: #fffbeb; padding: 15px; border-radius: 6px; margin: 20px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>CÃ´ng viá»‡c:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Háº¡n xá»­ lÃ½:</strong></td>
+                <td style="padding: 5px;">${object.deadline or 'N/A'}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>VÄƒn báº£n:</strong></td>
+                <td style="padding: 5px;">${object.van_ban_id.ten_van_ban}</td>
+            </tr>
+        </table>
+    </div>
+
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=van_ban_task&amp;view_type=form"
+           style="background-color: #f59e0b; color: white; padding: 10px 18px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem cÃ´ng viá»‡c
+        </a>
+    </p>
+
+    <p style="color: #6b7280; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <!-- Email Template: Task Overdue -->
+        <record id="email_template_van_ban_task_overdue" model="mail.template">
+            <field name="name">VÄƒn báº£n: CÃ´ng viá»‡c quÃ¡ háº¡n</field>
+            <field name="model_id" ref="model_van_ban_task"/>
+            <field name="subject">âš ï¸ CÃ´ng viá»‡c quÃ¡ háº¡n: ${object.name}</field>
+            <field name="email_from">noreply@example.com</field>
+            <field name="email_to">${object.employee_id.email|safe}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px;">
+    <h2 style="color: #dc2626;">âš ï¸ CÃ´ng viá»‡c Ä‘Ã£ quÃ¡ háº¡n</h2>
+
+    <p>Xin chÃ o <strong>${object.employee_id.ho_va_ten}</strong>,</p>
+
+    <p>CÃ´ng viá»‡c sau Ä‘Ã£ quÃ¡ háº¡n xá»­ lÃ½:</p>
+
+    <div style="background-color: #fef2f2; padding: 15px; border-radius: 6px; margin: 20px 0;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 5px;"><strong>CÃ´ng viá»‡c:</strong></td>
+                <td style="padding: 5px;">${object.name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>Háº¡n xá»­ lÃ½:</strong></td>
+                <td style="padding: 5px;">${object.deadline or 'N/A'}</td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;"><strong>VÄƒn báº£n:</strong></td>
+                <td style="padding: 5px;">${object.van_ban_id.ten_van_ban}</td>
+            </tr>
+        </table>
+    </div>
+
+    <p style="margin-top: 20px;">
+        <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=van_ban_task&amp;view_type=form"
+           style="background-color: #dc2626; color: white; padding: 10px 18px; text-decoration: none; border-radius: 5px; display: inline-block;">
+            Xem cÃ´ng viá»‡c
+        </a>
+    </p>
+
+    <p style="color: #6b7280; font-size: 12px; margin-top: 30px;">
+        ÄÃ¢y lÃ  email tá»± Ä‘á»™ng. Vui lÃ²ng khÃ´ng tráº£ lá»i email nÃ y.
+    </p>
+</div>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+
+
+
+
+
+

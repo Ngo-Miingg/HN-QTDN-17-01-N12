@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_van_ban_den_form" model="ir.ui.view">
+            <field name="name">van_ban_den</field>
+            <field name="model">van_ban_den</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <!-- Approval workflow buttons -->
+                        <button name="action_submit_approval" type="object" string="Gửi duyệt" 
+                                class="oe_highlight" 
+                                attrs="{'invisible': ['|', ('request_type', '=', 'normal'), ('approval_state', '!=', 'draft')]}"/>
+                        
+                        <button name="action_approve_and_sign" type="object" string="✅ Duyệt &amp; Ký" 
+                                class="btn-success"
+                                attrs="{'invisible': ['|', ('approval_state', '!=', 'pending'), ('request_type', '=', 'normal')]}"/>
+                        
+                        <button name="action_sign" type="object" string="🖊️ Ký" 
+                                class="btn-primary"
+                                attrs="{'invisible': ['|', '|', ('approval_state', '!=', 'pending'), ('is_signed', '=', True), ('request_type', '=', 'normal')]}"/>
+                        
+                        <button name="action_reject" type="object" string="❌ Từ chối" 
+                                class="btn-danger"
+                                attrs="{'invisible': [('approval_state', '!=', 'pending')]}"/>
+                        
+                        <field name="approval_state" widget="statusbar" 
+                               statusbar_visible="draft,pending,approved,rejected"
+                               attrs="{'invisible': [('request_type', '=', 'normal')]}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_read_only" style="font-size:25px">Văn bản đến</div>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_tasks" type="object" class="oe_stat_button" icon="fa-tasks">
+                                <field name="task_count" widget="statinfo" string="Công việc"/>
+                            </button>
+                            <button name="action_open_source" type="object" class="oe_stat_button" icon="fa-external-link"
+                                    attrs="{'invisible': ['|', ('source_model', '=', False), ('source_res_id', '=', 0)]}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Mở</span>
+                                    <span class="o_stat_text">Nghiệp vụ</span>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- Approval info banner -->
+                        <div class="alert alert-info" role="alert" style="margin-bottom:0px;" 
+                             attrs="{'invisible': [('request_type', '=', 'normal')]}">
+                            <strong>
+                                <field name="request_type" readonly="1"/>
+                            </strong>
+                        </div>
+                        <group col="4" string="Thông tin chung">
+                            <field name="ten_van_ban"/>
+                            <field name="so_van_ban_den"/>
+                            <field name="so_hieu_van_ban"/>
+                            <field name="noi_gui_den"/>
+                            <field name="request_type" attrs="{'invisible': [('request_type', '=', 'normal')]}"/>
+                        </group>
+                        <!-- Approval info group -->
+                        <group col="4" string="Thông tin phê duyệt" attrs="{'invisible': [('request_type', '=', 'normal')]}">
+                            <field name="requester_id"/>
+                            <field name="approver_id"/>
+                            <field name="approval_date" attrs="{'invisible': [('approval_state', 'not in', ['approved', 'rejected'])]}"/>
+                            <field name="approval_note" attrs="{'invisible': [('approval_state', 'not in', ['approved', 'rejected'])]}"/>
+                            <field name="van_ban_di_id" attrs="{'invisible': [('van_ban_di_id', '=', False)]}"/>
+                        </group>
+                        <!-- Meeting minutes -->
+                        <group string="Biên bản cuộc họp" attrs="{'invisible': [('request_type', '!=', 'meeting_minutes_approval')]}">
+                            <field name="meeting_subject" readonly="1"/>
+                            <field name="meeting_date" readonly="1"/>
+                            <field name="meeting_minutes" nolabel="1" readonly="0"/>
+                        </group>
+                        <!-- Chữ ký -->
+                        <group col="2" string="Chữ ký phê duyệt" attrs="{'invisible': [('request_type', '=', 'normal')]}">
+                            <group>
+                                <field name="is_signed" invisible="1"/>
+                                <field name="signature_date" attrs="{'invisible': [('is_signed', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="signature" widget="image" class="oe_avatar" attrs="{'invisible': [('is_signed', '=', False)]}"/>
+                            </group>
+                        </group>
+                        <group col="4" string="Liên kết nghiệp vụ" attrs="{'invisible': [('source_model', '=', False)]}">
+                            <field name="source_model" readonly="1"/>
+                            <field name="source_res_id" readonly="1"/>
+                            <field name="is_asset_document" readonly="1"/>
+                        </group>
+                        <group col="4" string="Nhân sự liên quan">
+                            <field name="handler_employee_id"/>
+                            <field name="signer_employee_id"/>
+                            <field name="receiver_employee_ids" widget="many2many_tags"/>
+                            <field name="department_id"/>
+                            <field name="due_date"/>
+                            <field name="is_overdue" readonly="1"/>
+                            <field name="reminder_enabled"/>
+                            <field name="reminder_days"/>
+                            <field name="last_reminder_date" readonly="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Giao việc">
+                                <group>
+                                    <button name="action_create_task" type="object" string="Tạo công việc" class="oe_highlight"/>
+                                </group>
+                                <field name="task_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="employee_id"/>
+                                        <field name="deadline"/>
+                                        <field name="state"/>
+                                        <field name="note"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_van_ban_den_tree" model="ir.ui.view">
+            <field name="name">van_ban_den.tree</field>
+            <field name="model">van_ban_den</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="so_van_ban_den"/>
+                    <field name="ten_van_ban"/>
+                    <field name="so_hieu_van_ban"/>
+                    <field name="noi_gui_den"/>
+                    <field name="handler_employee_id"/>
+                    <field name="request_type"/>
+                    <field name="approval_state" widget="badge"
+                           decoration-info="approval_state == 'draft'"
+                           decoration-warning="approval_state == 'pending'"
+                           decoration-success="approval_state == 'approved'"
+                           decoration-danger="approval_state == 'rejected'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="van_ban_den_search" model="ir.ui.view">
+            <field name="name">van_ban_den.search</field>
+            <field name="model">van_ban_den</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="so_van_ban_den"/>
+                    <field name="ten_van_ban"/>
+                    <field name="so_hieu_van_ban"/>
+                    <field name="noi_gui_den"/>
+                    <field name="handler_employee_id"/>
+                    <filter string="Chờ duyệt" name="pending" domain="[('approval_state', '=', 'pending')]"/>
+                    <filter string="Đã duyệt" name="approved" domain="[('approval_state', '=', 'approved')]"/>
+                    <group expand="0" string="Nhóm theo">
+                        <filter string="Loại yêu cầu" name="group_request_type" context="{'group_by': 'request_type'}"/>
+                        <filter string="Trạng thái" name="group_state" context="{'group_by': 'approval_state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_van_ban_den" model="ir.actions.act_window">
+            <field name="name">Văn bản đến</field>
+            <field name="res_model">van_ban_den</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="van_ban_den_search"/>
+        </record>
+    </data>
+</odoo>
+
