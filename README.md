@@ -87,10 +87,10 @@ Sơ đồ minh chứng được lưu tại:
 docs/diagrams/
 ```
 
-Ảnh giao diện theo luồng nghiệp vụ được lưu tại:
+Ảnh giao diện minh chứng được chọn lọc và lưu tại:
 
 ```text
-docs/imggiaodien/
+docs/screenshots/
 ```
 
 ---
@@ -117,7 +117,7 @@ docs/imggiaodien/
 |
 |-- docs/
 |   |-- diagrams/                   # Kiến trúc, ERD, use case, workflow
-|   |-- imggiaodien/                # Ảnh màn hình phục vụ báo cáo/demo
+|   |-- screenshots/                # Ảnh giao diện chọn lọc cho báo cáo/demo
 |   |-- PRODUCTIZATION.md           # Ghi chú đóng gói và demo sản phẩm
 |
 |-- docker-compose.yml              # PostgreSQL phục vụ chạy Odoo local
@@ -335,25 +335,28 @@ python .\odoo-bin -c .\odoo.conf -d ttdn_n6_dev --test-enable -u dnu_meeting_ass
 
 ## 12. Bộ ảnh và tài liệu báo cáo
 
-Ảnh giao diện chính nằm trong:
+Repo chỉ giữ một bộ ảnh đại diện, đủ minh chứng luồng chính nhưng không làm nặng và rối phần trình bày:
 
 ```text
-docs/imggiaodien/
+docs/screenshots/
 ```
 
-Nhóm ảnh cần dùng khi viết báo cáo:
+Ảnh đang giữ:
 
-- Dashboard tổng quan.
-- Danh sách và form tài sản.
-- Phiếu gán tài sản.
-- Phiếu mượn/trả tài sản.
-- Bảo trì, kiểm kê, luân chuyển, thanh lý.
-- Danh sách và form phòng họp.
-- Đặt phòng, phê duyệt đặt phòng, lịch sử đặt phòng.
-- Thống kê, báo cáo tổng hợp.
-- AI chatbot, cấu hình AI, lịch sử AI.
+| File | Minh chứng |
+| --- | --- |
+| `01-dashboard.png` | Dashboard tổng quan |
+| `02-assets-list.png` | Danh sách tài sản |
+| `03-asset-lending.png` | Phiếu mượn/trả tài sản |
+| `04-asset-maintenance.png` | Bảo trì tài sản |
+| `05-meeting-rooms.png` | Danh sách phòng họp |
+| `06-room-bookings.png` | Danh sách đặt phòng |
+| `07-booking-approval.png` | Phê duyệt đặt phòng |
+| `08-asset-report.png` | Báo cáo tổng hợp tài sản |
+| `09-ai-chatbot.png` | AI chatbot hỗ trợ nghiệp vụ |
+| `10-ai-history.png` | Lịch sử AI |
 
-Các ảnh nên được đưa vào báo cáo theo luồng nghiệp vụ, không chụp rời rạc.
+Các ảnh chi tiết khác nên để trong báo cáo Word/PDF hoặc thư mục cá nhân khi cần, không đẩy tràn lên GitHub.
 
 ---
 
