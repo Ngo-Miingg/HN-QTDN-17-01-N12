@@ -4,12 +4,16 @@
   </a>
 </h2>
 
-<h1 align="center">Hệ thống Quản lý Tài sản & Phòng họp trên Odoo 15</h1>
+<h1 align="center">Odoo 15 - Quản lý Tài sản & Phòng họp</h1>
 
 <p align="center">
-  <img src="docs/logo/aiotlab_logo.png" alt="AIoTLab Logo" width="155"/>
-  <img src="docs/logo/fitdnu_logo.png" alt="FIT-DNU Logo" width="170"/>
-  <img src="docs/logo/dnu_logo.png" alt="Dai Nam University Logo" width="190"/>
+  <b>Asset Lifecycle Management • Meeting Room Booking • HRM Master Data • Operational Dashboard • AI Assistant</b>
+</p>
+
+<p align="center">
+  <img src="docs/logo/aiotlab_logo.png" alt="AIoTLab Logo" width="150"/>
+  <img src="docs/logo/fitdnu_logo.png" alt="FIT-DNU Logo" width="165"/>
+  <img src="docs/logo/dnu_logo.png" alt="Dai Nam University Logo" width="185"/>
 </p>
 
 <p align="center">
@@ -19,96 +23,148 @@
   <a href="#"><img src="https://img.shields.io/badge/Docker-ready-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/></a>
 </p>
 
-<p align="center">
-  Bài tập lớn học phần <b>Hội nhập và Quản trị Doanh nghiệp</b><br/>
-  Đề tài: <b>Quản lý tài sản + Phòng họp</b><br/>
-  Phát triển kế thừa từ repo mẫu và mở rộng theo hướng nghiệp vụ doanh nghiệp, dashboard, báo cáo và AI hỗ trợ.
-</p>
-
 ---
 
-## 1. Tổng quan đề tài
+## 1. Executive Summary
 
-Dự án xây dựng một module Odoo 15 phục vụ quản lý vòng đời tài sản và điều phối sử dụng phòng họp trong doanh nghiệp/trường học. Hệ thống lấy dữ liệu nhân sự làm dữ liệu gốc để xác định người sử dụng tài sản, người đặt phòng, người phê duyệt và các bên liên quan trong từng luồng nghiệp vụ.
+Dự án triển khai một phân hệ Odoo 15 cho bài toán **quản lý tài sản và điều phối phòng họp** trong môi trường doanh nghiệp/trường học. Trọng tâm của hệ thống không chỉ là tạo các màn hình CRUD, mà là xây dựng một luồng vận hành có dữ liệu gốc, trạng thái xử lý, lịch sử, phân quyền, báo cáo và khả năng hỗ trợ quyết định.
 
-Module chính của đề tài là:
+Góc nhìn thiết kế của dự án đi theo tư duy HRM/ERP:
+
+- **HRM là dữ liệu gốc**: nhân viên, phòng ban, chức vụ là nguồn tham chiếu cho người nhận tài sản, người mượn tài sản, người đặt phòng, người phê duyệt và người phụ trách xử lý.
+- **Tài sản là đối tượng vận hành có vòng đời**: từ ghi nhận, phân loại, cấp phát, mượn/trả, bảo trì, kiểm kê, luân chuyển đến thanh lý.
+- **Phòng họp là tài nguyên dùng chung**: cần quản lý sức chứa, thiết bị, lịch đặt, xung đột thời gian và trạng thái phê duyệt.
+- **AI là lớp hỗ trợ nghiệp vụ**: AI không thay thế rule của Odoo, mà giúp tra cứu, tóm tắt, gợi ý và lưu lịch sử hỏi đáp dựa trên dữ liệu hệ thống.
+
+Module chính:
 
 ```text
 addons/dnu_meeting_asset
 ```
 
-Các nhóm nghiệp vụ trọng tâm:
-
-| Nhóm nghiệp vụ | Mục tiêu |
-| --- | --- |
-| Quản lý tài sản | Theo dõi danh mục tài sản, trạng thái, vị trí, người sử dụng và vòng đời sử dụng |
-| Cấp phát và bàn giao | Gán tài sản cho nhân viên, lập biên bản bàn giao, theo dõi lịch sử |
-| Mượn và trả tài sản | Quản lý tài sản dùng chung, phê duyệt mượn, trả, quá hạn và trạng thái khả dụng |
-| Bảo trì | Ghi nhận yêu cầu bảo trì, phân công xử lý, theo dõi chi phí và tình trạng |
-| Kiểm kê, luân chuyển, thanh lý | Hỗ trợ nghiệp vụ quản trị tài sản định kỳ và xử lý tài sản hết vòng đời |
-| Quản lý phòng họp | Khai báo phòng, sức chứa, thiết bị, đặt lịch, kiểm tra xung đột |
-| Dashboard và báo cáo | Tổng hợp dữ liệu vận hành để minh chứng hiệu quả quản trị |
-| AI hỗ trợ | Hỏi đáp nghiệp vụ, gợi ý xử lý dựa trên dữ liệu thật trong hệ thống |
-
----
-
-## 2. Điểm nổi bật
-
-- Kế thừa cấu trúc Odoo 15 từ repo mẫu, không tách rời khỏi nền tảng ERP.
-- Thiết kế module theo nghiệp vụ thật: tài sản, nhân sự, phòng họp, mượn trả, bảo trì, đặt lịch.
-- Có dữ liệu mẫu phục vụ demo và kiểm thử luồng end-to-end.
-- Có dashboard, báo cáo và bộ ảnh minh chứng được chọn lọc, không đẩy tràn ảnh lên GitHub.
-- Có lớp AI hỗ trợ nghiệp vụ theo hướng kiểm soát dữ liệu, hạn chế trả lời chung chung.
-- Có script seed dữ liệu để tạo nhanh môi trường demo.
-
-## 2.1. Core Feature Review
-
-Tài liệu review tính năng cốt lõi được tách riêng để người chấm hoặc người review code có thể đi thẳng vào phần quan trọng nhất của dự án:
+Tài liệu review tính năng cốt lõi:
 
 ```text
 docs/CORE_FEATURE_REVIEW.md
 ```
 
-Tài liệu này tập trung vào:
+---
 
-| Nhóm tính năng | Điểm review chính |
+## 2. Business Problem
+
+Trong nhiều đơn vị, tài sản và phòng họp thường được quản lý rời rạc bằng Excel, tin nhắn hoặc biểu mẫu thủ công. Cách làm này tạo ra các vấn đề quen thuộc:
+
+| Vấn đề | Hệ quả |
 | --- | --- |
-| HR master data | Nhân sự là dữ liệu gốc cho người nhận tài sản, người mượn, người đặt phòng và người phụ trách |
-| Asset lifecycle | Tài sản có trạng thái, người dùng, vị trí, cấp phát, mượn/trả, bảo trì, kiểm kê và thanh lý |
-| Meeting booking | Phòng họp có sức chứa, thiết bị, lịch đặt, phê duyệt và kiểm tra xung đột |
-| Business controls | Có phân quyền, trạng thái xử lý, sequence, cron và dữ liệu lịch sử |
-| Dashboard/report | Có màn hình tổng hợp để theo dõi tình trạng tài sản, đặt phòng, mượn trả và bảo trì |
-| AI assistant | AI bám vào dữ liệu Odoo, có lịch sử hỏi đáp và fallback khi không dùng API trả phí |
+| Không biết tài sản đang ở đâu, ai đang giữ | Khó quy trách nhiệm, dễ thất lạc |
+| Tài sản dùng chung bị mượn trùng hoặc trả muộn | Gián đoạn công việc, thiếu thiết bị khi cần |
+| Bảo trì không có lịch sử rõ ràng | Khó đánh giá chi phí và tình trạng tài sản |
+| Phòng họp bị đặt trùng lịch | Xung đột vận hành, mất thời gian điều phối |
+| Dữ liệu nhân sự không liên kết với tài sản/phòng họp | Báo cáo thiếu ngữ cảnh phòng ban, chức vụ, người phụ trách |
+| Báo cáo làm thủ công | Khó theo dõi tình hình theo thời gian thực |
 
-Đây là phần nên dùng khi trình bày hoặc bảo vệ: đi từ bài toán doanh nghiệp, sang model Odoo, sang luồng dữ liệu, rồi mới mở giao diện minh chứng.
+Dự án này giải quyết các vấn đề trên bằng cách đưa tài sản, phòng họp và nhân sự vào cùng một hệ thống ERP trên Odoo.
 
 ---
 
-## 3. Kiến trúc hệ thống
+## 3. Core Capabilities Review
+
+| Mã | Năng lực cốt lõi | Giá trị nghiệp vụ | Thành phần triển khai |
+| --- | --- | --- | --- |
+| C01 | HRM Master Data | Dùng nhân viên/phòng ban/chức vụ làm dữ liệu gốc cho toàn bộ luồng | `hr`, `nhan_su`, `hr_employee_extend.py` |
+| C02 | Asset Master Data | Quản lý hồ sơ tài sản, mã, danh mục, vị trí, trạng thái, người sử dụng | `dnu_asset.py`, `dnu_asset_category.py` |
+| C03 | Asset Assignment & Handover | Cấp phát tài sản cho nhân viên, ghi nhận bàn giao và lịch sử chịu trách nhiệm | `dnu_asset_assignment.py`, `dnu_asset_handover.py` |
+| C04 | Asset Lending | Quản lý mượn/trả tài sản dùng chung, kiểm soát trạng thái khả dụng | `dnu_asset_lending.py` |
+| C05 | Maintenance Management | Theo dõi bảo trì, phân công xử lý, chi phí, lịch bảo trì định kỳ | `dnu_asset_maintenance.py`, `dnu_maintenance_schedule.py` |
+| C06 | Inventory, Transfer, Disposal | Bao phủ vòng đời sau sử dụng: kiểm kê, luân chuyển, thanh lý | `dnu_asset_inventory.py`, `dnu_asset_transfer.py`, `dnu_asset_disposal.py` |
+| C07 | Meeting Room Master Data | Quản lý phòng họp, sức chứa, thiết bị, trạng thái sử dụng | `dnu_meeting_room.py` |
+| C08 | Meeting Booking | Đặt phòng, kiểm tra xung đột, phê duyệt, theo dõi lịch sử sử dụng | `dnu_meeting_booking.py` |
+| C09 | Dashboard & Reports | Tổng hợp dữ liệu vận hành phục vụ quản trị | `dnu_asset_dashboard.py`, `reports/*.xml` |
+| C10 | AI Assistant | Hỏi đáp/tóm tắt/gợi ý nghiệp vụ dựa trên dữ liệu Odoo | `openai_integration.py`, `ai_wizard.py`, `ai_history.py` |
+
+Điểm quan trọng khi review: hệ thống có **dữ liệu gốc**, **luồng trạng thái**, **quan hệ giữa các module**, **báo cáo**, và **lịch sử xử lý**. Đây là những yếu tố phân biệt một bài Odoo có nghiệp vụ với một bài chỉ tạo model và menu.
+
+---
+
+## 4. Business Flow
+
+### 4.1. Asset Lifecycle
 
 ```text
-Người dùng Odoo
+HR master data
+  -> Khai báo tài sản
+  -> Phân loại danh mục, vị trí, trạng thái
+  -> Cấp phát hoặc đưa vào kho dùng chung
+  -> Bàn giao / mượn trả / bảo trì
+  -> Kiểm kê / luân chuyển / thanh lý
+  -> Dashboard và báo cáo quản trị
+```
+
+Ý nghĩa nghiệp vụ:
+
+- Biết tài sản đang ở đâu và do ai chịu trách nhiệm.
+- Phân biệt rõ tài sản sẵn sàng, đang sử dụng, đang mượn, đang bảo trì hoặc đã thanh lý.
+- Có lịch sử phục vụ kiểm tra, bàn giao và báo cáo.
+
+### 4.2. Meeting Room Booking
+
+```text
+HR master data
+  -> Khai báo phòng họp
+  -> Người dùng tạo phiếu đặt phòng
+  -> Kiểm tra thời gian, phòng, sức chứa, xung đột
+  -> Phê duyệt hoặc xác nhận
+  -> Lưu lịch sử sử dụng phòng
+  -> Báo cáo đặt phòng
+```
+
+Ý nghĩa nghiệp vụ:
+
+- Giảm đặt trùng lịch.
+- Biết phòng nào đang được dùng nhiều.
+- Liên kết người đặt với nhân sự/phòng ban.
+- Có dữ liệu để tối ưu sử dụng tài nguyên dùng chung.
+
+### 4.3. AI Assisted Operations
+
+```text
+Người dùng đặt câu hỏi
+  -> AI xác định miền nghiệp vụ
+  -> Lấy dữ liệu liên quan trong Odoo
+  -> Trả lời có căn cứ
+  -> Lưu lịch sử hỏi đáp
+```
+
+AI trong dự án được đặt ở vai trò hỗ trợ vận hành. Các quyết định cốt lõi như trạng thái tài sản, phê duyệt đặt phòng, trả tài sản hoặc bảo trì vẫn do rule và dữ liệu Odoo kiểm soát.
+
+---
+
+## 5. Architecture
+
+```text
+Odoo Web Client
     |
     v
-Module dnu_meeting_asset
+dnu_meeting_asset
     |
-    +-- HR/Employees: dữ liệu nhân viên, phòng ban, chức vụ
-    +-- Asset: tài sản, danh mục, cấp phát, mượn trả, bảo trì
+    +-- HRM: nhân viên, phòng ban, chức vụ
+    +-- Asset: tài sản, cấp phát, mượn/trả, bảo trì, kiểm kê, thanh lý
     +-- Meeting: phòng họp, đặt phòng, kiểm tra xung đột
-    +-- Document/Approval: liên kết văn bản và phê duyệt
-    +-- AI Service: trợ lý nghiệp vụ dựa trên dữ liệu hệ thống
+    +-- Document/Approval: văn bản và phê duyệt
+    +-- Mail/Calendar: thông báo và lịch
+    +-- AI Service: hỗ trợ tra cứu, tóm tắt, gợi ý
     |
     v
 PostgreSQL
 ```
 
-Sơ đồ minh chứng được lưu tại:
+Sơ đồ:
 
 ```text
 docs/diagrams/
 ```
 
-Ảnh giao diện minh chứng được chọn lọc và lưu tại:
+Ảnh minh chứng chọn lọc:
 
 ```text
 docs/screenshots/
@@ -116,159 +172,104 @@ docs/screenshots/
 
 ---
 
-## 4. Cấu trúc thư mục quan trọng
+## 6. Repository Structure
 
 ```text
 .
 |-- addons/
 |   |-- dnu_meeting_asset/          # Module chính của đề tài
-|   |   |-- models/                 # Model nghiệp vụ
-|   |   |-- views/                  # Giao diện Odoo XML
+|   |   |-- models/                 # Business models
+|   |   |-- views/                  # Odoo XML views
 |   |   |-- wizards/                # Wizard thao tác nhanh
-|   |   |-- reports/                # Báo cáo PDF/action
-|   |   |-- security/               # Nhóm quyền và phân quyền model
-|   |   |-- data/                   # Sequence, cron, cấu hình, seed XML
-|   |   |-- scripts/                # Script seed dữ liệu demo
-|   |   |-- tests/                  # Test nghiệp vụ chính
-|   |   |-- static/                 # CSS/icon/module assets
-|   |   |-- README.md               # Tài liệu riêng của module
+|   |   |-- reports/                # Báo cáo
+|   |   |-- security/               # Access right và security rule
+|   |   |-- data/                   # Sequence, cron, seed, cấu hình mặc định
+|   |   |-- scripts/                # Seed dữ liệu demo
+|   |   |-- tests/                  # Test luồng nghiệp vụ
 |   |
-|   |-- nhan_su/                    # Module nhân sự dùng làm dữ liệu gốc
-|   |-- quan_ly_van_ban/            # Module văn bản/phê duyệt liên quan
-|
+|-- BaiTapLab/                      # Bài lab chấm công/lương, tách riêng khỏi bài tập lớn
 |-- docs/
-|   |-- diagrams/                   # Kiến trúc, ERD, use case, workflow
-|   |-- screenshots/                # Ảnh giao diện chọn lọc cho báo cáo/demo
-|   |-- PRODUCTIZATION.md           # Ghi chú đóng gói và demo sản phẩm
+|   |-- CORE_FEATURE_REVIEW.md      # Review tính năng cốt lõi
+|   |-- diagrams/                   # ERD, use case, workflow, architecture
+|   |-- screenshots/                # Ảnh demo chọn lọc
+|   |-- PRODUCTIZATION.md           # Ghi chú demo/đóng gói
 |
-|-- docker-compose.yml              # PostgreSQL phục vụ chạy Odoo local
-|-- odoo-bin                        # Entry point Odoo
-|-- requirements.txt                # Phụ thuộc Python
+|-- docker-compose.yml              # PostgreSQL local
+|-- odoo-bin                        # Odoo entry point
+|-- requirements.txt                # Python dependencies
 ```
 
 ---
 
-## 5. Các model nghiệp vụ chính
+## 7. Evidence Package
 
-| Model | Vai trò |
+Repo chỉ giữ ảnh đại diện để tránh rối và thiếu chuyên nghiệp:
+
+| File | Minh chứng |
 | --- | --- |
-| `dnu.asset` | Hồ sơ tài sản |
-| `dnu.asset.category` | Danh mục tài sản |
-| `dnu.asset.assignment` | Phiếu gán/cấp phát tài sản |
-| `dnu.asset.lending` | Phiếu mượn/trả tài sản dùng chung |
-| `dnu.asset.handover` | Biên bản bàn giao tài sản |
-| `dnu.asset.maintenance` | Yêu cầu bảo trì tài sản |
-| `dnu.maintenance.schedule` | Lịch bảo trì định kỳ |
-| `dnu.asset.inventory` | Đợt kiểm kê tài sản |
-| `dnu.asset.transfer` | Luân chuyển tài sản |
-| `dnu.asset.disposal` | Thanh lý tài sản |
-| `dnu.meeting.room` | Hồ sơ phòng họp |
-| `dnu.meeting.booking` | Phiếu đặt phòng họp |
-| `openai.config`, `ai.history` | Cấu hình và lịch sử AI |
+| `docs/screenshots/01-dashboard.png` | Dashboard tổng quan |
+| `docs/screenshots/02-assets-list.png` | Danh sách tài sản |
+| `docs/screenshots/03-asset-lending.png` | Phiếu mượn/trả tài sản |
+| `docs/screenshots/04-asset-maintenance.png` | Bảo trì tài sản |
+| `docs/screenshots/05-meeting-rooms.png` | Danh sách phòng họp |
+| `docs/screenshots/06-room-bookings.png` | Danh sách đặt phòng |
+| `docs/screenshots/07-booking-approval.png` | Phê duyệt đặt phòng |
+| `docs/screenshots/08-asset-report.png` | Báo cáo tài sản |
+| `docs/screenshots/09-ai-chatbot.png` | AI chatbot |
+| `docs/screenshots/10-ai-history.png` | Lịch sử AI |
 
----
-
-## 6. Luồng nghiệp vụ chính
-
-### 6.1. Luồng quản lý tài sản
+Tài liệu review sâu:
 
 ```text
-Tạo tài sản
-  -> Phân loại danh mục, vị trí, trạng thái
-  -> Gán cho nhân viên hoặc đưa vào kho dùng chung
-  -> Bàn giao, mượn/trả, bảo trì, kiểm kê
-  -> Luân chuyển hoặc thanh lý khi cần
-  -> Báo cáo vòng đời tài sản
-```
-
-### 6.2. Luồng mượn/trả tài sản
-
-```text
-Nhân viên tạo phiếu mượn
-  -> Hệ thống kiểm tra trạng thái tài sản
-  -> Quản lý phê duyệt
-  -> Tài sản chuyển sang trạng thái đang mượn/đã cấp phát
-  -> Nhân viên trả tài sản
-  -> Hệ thống cập nhật trạng thái khả dụng
-```
-
-### 6.3. Luồng đặt phòng họp
-
-```text
-Người dùng chọn phòng và thời gian
-  -> Hệ thống kiểm tra xung đột lịch
-  -> Tạo phiếu đặt phòng
-  -> Phê duyệt hoặc xác nhận
-  -> Theo dõi lịch sử sử dụng phòng
-  -> Tổng hợp báo cáo đặt phòng
-```
-
-### 6.4. Luồng AI hỗ trợ nghiệp vụ
-
-```text
-Người dùng đặt câu hỏi
-  -> AI xác định nhóm nghiệp vụ: tài sản, phòng họp, nhân sự, bảo trì
-  -> Hệ thống lấy dữ liệu liên quan trong Odoo
-  -> AI trả lời có căn cứ dữ liệu
-  -> Ghi lịch sử hỏi đáp để kiểm tra lại
+docs/CORE_FEATURE_REVIEW.md
 ```
 
 ---
 
-## 7. Cài đặt và chạy local
+## 8. Installation
 
-### 7.1. Yêu cầu môi trường
-
-- Windows 10/11 hoặc Ubuntu/WSL2
-- Python phù hợp với Odoo 15
-- PostgreSQL hoặc Docker Desktop
-- Git
-- Các thư viện trong `requirements.txt`
-
-### 7.2. Khởi động PostgreSQL bằng Docker
+### 8.1. Start PostgreSQL
 
 ```powershell
 cd D:\Work\HocKy3\Enterprise_software_integration_and_management\TTDN-16-01-N6
 docker compose up -d postgres-odoo-base-15-01
 ```
 
-Kiểm tra cổng database:
+Kiểm tra:
 
 ```powershell
 Test-NetConnection localhost -Port 5431
 ```
 
-### 7.3. Chạy Odoo
+### 8.2. Start Odoo
 
 ```powershell
 cd D:\Work\HocKy3\Enterprise_software_integration_and_management\TTDN-16-01-N6
 python .\odoo-bin -c .\odoo.conf
 ```
 
-Đường dẫn truy cập:
+URL:
 
 ```text
 http://localhost:8071
 ```
 
-Tài khoản demo thường dùng:
+Tài khoản demo:
 
 ```text
 Email: admin
 Password: admin
 ```
 
----
+### 8.3. Install Module
 
-## 8. Cài module trong Odoo
+Trong Odoo:
 
-1. Vào `Apps`.
-2. Bấm `Update Apps List` nếu chưa thấy module.
-3. Tìm `Quản lý Tài sản & Phòng họp`.
-4. Bấm `Install`.
-5. Sau khi cài xong, vào menu `Tài sản & Phòng họp`.
+```text
+Apps -> Update Apps List -> tìm "Quản lý Tài sản & Phòng họp" -> Install
+```
 
-Menu chính sau khi cài:
+Menu sau khi cài:
 
 ```text
 Tài sản & Phòng họp
@@ -282,15 +283,15 @@ Tài sản & Phòng họp
 
 ---
 
-## 9. Tạo dữ liệu demo
+## 9. Demo Data
 
-Module có sẵn XML seed trong:
+Seed XML:
 
 ```text
 addons/dnu_meeting_asset/data/demo_seed_data.xml
 ```
 
-Ngoài ra có script seed dữ liệu demo lớn hơn:
+Seed dữ liệu demo lớn hơn:
 
 ```powershell
 $env:ODOO_RC = "D:\Work\HocKy3\Enterprise_software_integration_and_management\TTDN-16-01-N6\odoo.conf"
@@ -299,54 +300,33 @@ python .\addons\dnu_meeting_asset\scripts\seed_fake_data.py
 
 Dữ liệu demo bao gồm:
 
-- Phòng ban, chức vụ, nhân viên
-- Phòng họp, sức chứa, thiết bị
-- Tài sản văn phòng, thiết bị IT, thiết bị phòng họp
-- Phiếu gán tài sản, mượn/trả tài sản
-- Phiếu đặt phòng họp
-- Yêu cầu bảo trì
-- Dữ liệu phục vụ dashboard và báo cáo
+- Nhân viên, phòng ban, chức vụ.
+- Tài sản văn phòng, thiết bị IT, thiết bị phòng họp.
+- Phòng họp, sức chứa, thiết bị.
+- Phiếu gán tài sản, phiếu mượn/trả, bảo trì.
+- Phiếu đặt phòng và dữ liệu báo cáo.
 
 ---
 
-## 10. AI hỗ trợ nghiệp vụ
+## 10. Testing
 
-AI trong dự án được thiết kế theo hướng hỗ trợ ra quyết định, không thay thế dữ liệu nghiệp vụ của Odoo.
-
-Các khả năng chính:
-
-- Hỏi đáp tình trạng tài sản.
-- Gợi ý xử lý tài sản đang bảo trì, quá hạn trả hoặc sắp thanh lý.
-- Tóm tắt lịch đặt phòng và phát hiện nguy cơ xung đột.
-- Hỗ trợ tra cứu nhân sự liên quan đến tài sản/phòng họp.
-- Lưu lịch sử phiên hỏi đáp để phục vụ kiểm tra demo.
-
-Lưu ý khi demo:
-
-- Không commit API key thật.
-- Không đưa `opencode.json`, `.env`, file cấu hình cá nhân hoặc log lên GitHub.
-- Có thể demo chế độ fallback/rule-based nếu không muốn dùng API trả phí.
-
----
-
-## 11. Kiểm thử nhanh
-
-Kiểm tra cú pháp Python của module:
+Kiểm tra cú pháp Python:
 
 ```powershell
-python -m py_compile `
-  .\addons\dnu_meeting_asset\models\*.py `
-  .\addons\dnu_meeting_asset\wizards\*.py `
-  .\addons\dnu_meeting_asset\controllers\*.py
+Get-ChildItem .\addons\dnu_meeting_asset\models\*.py, `
+  .\addons\dnu_meeting_asset\wizards\*.py, `
+  .\addons\dnu_meeting_asset\controllers\*.py | ForEach-Object {
+    python -m py_compile $_.FullName
+  }
 ```
 
-Cài hoặc nâng cấp module:
+Nâng cấp module:
 
 ```powershell
 python .\odoo-bin -c .\odoo.conf -d ttdn_n6_dev -u dnu_meeting_asset --stop-after-init
 ```
 
-Chạy test nghiệp vụ nếu môi trường đã sẵn sàng:
+Chạy test nghiệp vụ:
 
 ```powershell
 python .\odoo-bin -c .\odoo.conf -d ttdn_n6_dev --test-enable -u dnu_meeting_asset --stop-after-init
@@ -354,80 +334,67 @@ python .\odoo-bin -c .\odoo.conf -d ttdn_n6_dev --test-enable -u dnu_meeting_ass
 
 ---
 
-## 12. Bộ ảnh và tài liệu báo cáo
+## 11. Demo Script For Review
 
-Repo chỉ giữ một bộ ảnh đại diện, đủ minh chứng luồng chính nhưng không làm nặng và rối phần trình bày:
+Thứ tự trình bày nên đi theo nghiệp vụ:
 
-```text
-docs/screenshots/
-```
-
-Ảnh đang giữ:
-
-| File | Minh chứng |
-| --- | --- |
-| `01-dashboard.png` | Dashboard tổng quan |
-| `02-assets-list.png` | Danh sách tài sản |
-| `03-asset-lending.png` | Phiếu mượn/trả tài sản |
-| `04-asset-maintenance.png` | Bảo trì tài sản |
-| `05-meeting-rooms.png` | Danh sách phòng họp |
-| `06-room-bookings.png` | Danh sách đặt phòng |
-| `07-booking-approval.png` | Phê duyệt đặt phòng |
-| `08-asset-report.png` | Báo cáo tổng hợp tài sản |
-| `09-ai-chatbot.png` | AI chatbot hỗ trợ nghiệp vụ |
-| `10-ai-history.png` | Lịch sử AI |
-
-Các ảnh chi tiết khác nên để trong báo cáo Word/PDF hoặc thư mục cá nhân khi cần, không đẩy tràn lên GitHub.
+1. Mở dashboard để giới thiệu bức tranh vận hành.
+2. Mở danh sách tài sản, giải thích mã tài sản, trạng thái, vị trí, người sử dụng.
+3. Mở phiếu mượn/trả tài sản, nhấn mạnh rule khả dụng và trách nhiệm người mượn.
+4. Mở bảo trì tài sản, giải thích người phụ trách, chi phí, trạng thái.
+5. Mở danh sách phòng họp, giải thích sức chứa và thiết bị.
+6. Mở đặt phòng, giải thích thời gian, người đặt, xung đột và phê duyệt.
+7. Mở báo cáo tổng hợp.
+8. Mở AI chatbot và lịch sử AI để chứng minh lớp hỗ trợ nghiệp vụ.
 
 ---
 
-## 13. Ghi chú GitHub
+## 12. Security & Repository Hygiene
 
-Remote mẫu:
-
-```text
-https://github.com/lamngoctuu18/TTDN-16-01-N6.git
-```
-
-Remote nộp bài:
-
-```text
-https://github.com/Ngo-Miingg/HN-QTDN-17-01-N12.git
-```
-
-Trước khi đẩy GitHub cần kiểm tra:
-
-```powershell
-git status -sb
-git diff --stat
-git ls-files --others --exclude-standard
-```
-
-Không đẩy:
+Không commit:
 
 - API key, token, mật khẩu.
-- Log chạy server.
+- `.env`, `opencode.json`, cấu hình cá nhân.
+- Log runtime.
 - Database dump.
-- File `.env`, `opencode.json`, cấu hình cá nhân.
-- Bản nháp báo cáo `.docx` nếu không được yêu cầu.
+- Bản nháp báo cáo Word/PDF nếu không phục vụ trực tiếp cho repo.
+
+Repo đã tách:
+
+- `BaiTapLab/`: bài lab nhỏ, không lẫn với bài tập lớn.
+- `addons/dnu_meeting_asset/`: module bài tập lớn.
+- `docs/screenshots/`: ảnh chọn lọc.
+- `docs/CORE_FEATURE_REVIEW.md`: review tính năng trọng tâm.
 
 ---
 
-## 14. Thành viên và phạm vi nộp bài
+## 13. Project Evaluation
 
-Dự án phục vụ học phần Hội nhập và Quản trị Doanh nghiệp, tập trung vào việc hiểu bài toán doanh nghiệp, xác định module tích hợp, triển khai luồng nghiệp vụ trên Odoo và đánh giá rủi ro khi đưa ERP vào vận hành.
+Tiêu chí tự đánh giá:
 
-Phần nộp bài nên bao gồm:
+| Tiêu chí | Đánh giá |
+| --- | --- |
+| Hiểu bài toán doanh nghiệp | Có: tài sản, phòng họp, HRM master data, luồng vận hành |
+| Thiết kế module Odoo | Có: model, view, security, wizard, report, cron, seed |
+| Tích hợp dữ liệu | Có: HRM, tài sản, phòng họp, văn bản, mail/calendar |
+| Luồng nghiệp vụ end-to-end | Có: cấp phát, mượn/trả, bảo trì, đặt phòng, phê duyệt, báo cáo |
+| Nâng cao | Có: dashboard, AI assistant, dữ liệu demo, test |
+| Tính sẵn sàng demo | Có: script chạy, seed data, ảnh minh chứng, core review |
 
-- Source code module Odoo.
-- README hướng dẫn chạy.
-- Dữ liệu demo.
-- Ảnh giao diện theo luồng.
-- Báo cáo phân tích nghiệp vụ và thiết kế hệ thống.
-- Kịch bản demo.
+Kết luận: dự án đủ điều kiện trình bày như một phân hệ ERP/Odoo có nghiệp vụ, có dữ liệu liên kết và có định hướng mở rộng, không dừng ở mức tạo form cơ bản.
+
+---
+
+## 14. References
+
+- Odoo 15 Community Edition
+- PostgreSQL
+- Python
+- Docker
+- FIT-DNU Business Internship repository structure
 
 ---
 
 ## 15. License
 
-Dự án phát triển cho mục đích học tập trên nền Odoo Community Edition. Các module tùy biến được sử dụng trong phạm vi bài tập lớn của học phần.
+Dự án phục vụ mục đích học tập trong học phần Hội nhập và Quản trị Doanh nghiệp. Các phần tùy biến được sử dụng trong phạm vi bài tập lớn.
