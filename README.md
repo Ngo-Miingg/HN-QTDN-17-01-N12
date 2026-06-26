@@ -226,26 +226,65 @@ docs/CORE_FEATURE_REVIEW.md
 
 ---
 
-## 8. Installation
+## 8. Quick Start
 
-### 8.1. Start PostgreSQL
+Mục tiêu của phần này là để một người mới clone repo có thể dựng môi trường local theo các bước rõ ràng. Dự án đã có `docker-compose.yml`, `odoo.conf.template` và script chạy nhanh cho Windows.
+
+### 8.1. Prerequisites
+
+- Git.
+- Docker Desktop.
+- Python phù hợp với Odoo 15. Khuyến nghị dùng Python 3.8-3.10 để giảm lỗi phụ thuộc.
+- PostgreSQL không cần cài riêng nếu dùng Docker.
+
+### 8.2. Clone repository
 
 ```powershell
-cd D:\Work\HocKy3\Enterprise_software_integration_and_management\TTDN-16-01-N6
-docker compose up -d postgres-odoo-base-15-01
+git clone https://github.com/Ngo-Miingg/HN-QTDN-17-01-N12.git
+cd HN-QTDN-17-01-N12
 ```
 
-Kiểm tra:
+### 8.3. Create local configuration
+
+File `odoo.conf` không được commit vì là cấu hình local. Khi chạy `start-product.ps1`, file này sẽ được tạo tự động từ `odoo.conf.template`. Nếu muốn tạo thủ công:
 
 ```powershell
-Test-NetConnection localhost -Port 5431
+Copy-Item .\odoo.conf.template .\odoo.conf
 ```
 
-### 8.2. Start Odoo
+Cấu hình mặc định:
+
+```text
+PostgreSQL host: localhost
+PostgreSQL port: 5431
+PostgreSQL user: odoo
+PostgreSQL password: odoo
+Odoo HTTP port: 8071
+Database: ttdn_n6_dev
+```
+
+### 8.4. Install Python dependencies
+
+Khuyến nghị tạo virtual environment riêng:
 
 ```powershell
-cd D:\Work\HocKy3\Enterprise_software_integration_and_management\TTDN-16-01-N6
-python .\odoo-bin -c .\odoo.conf
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 8.5. One-command startup on Windows
+
+Script này sẽ:
+
+- Tạo `odoo.conf` nếu chưa có.
+- Khởi động PostgreSQL bằng Docker.
+- Cài/nâng cấp các module cần thiết.
+- Chạy Odoo ở cổng `8071`.
+
+```powershell
+.\start-product.ps1
 ```
 
 URL:
@@ -254,16 +293,32 @@ URL:
 http://localhost:8071
 ```
 
-Tài khoản demo:
+Tài khoản demo thường dùng sau khi tạo database:
 
 ```text
 Email: admin
 Password: admin
 ```
 
-### 8.3. Install Module
+### 8.6. Manual startup
 
-Trong Odoo:
+Nếu không dùng script:
+
+```powershell
+docker compose up -d postgres-odoo-base-15-01
+python .\odoo-bin.py -c .\odoo.conf -d ttdn_n6_dev --http-port 8071 -u nhan_su,quan_ly_van_ban,event_meeting_room_extended,dnu_meeting_asset --stop-after-init
+python .\odoo-bin.py -c .\odoo.conf -d ttdn_n6_dev --http-port 8071
+```
+
+Kiểm tra database port:
+
+```powershell
+Test-NetConnection localhost -Port 5431
+```
+
+### 8.7. Install Module From UI
+
+Nếu chạy theo script, module đã được upgrade bằng command line. Nếu cài thủ công trong UI:
 
 ```text
 Apps -> Update Apps List -> tìm "Quản lý Tài sản & Phòng họp" -> Install

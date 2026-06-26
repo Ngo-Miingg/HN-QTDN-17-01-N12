@@ -7,13 +7,18 @@ $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 Set-Location -LiteralPath $root
 
+if (!(Test-Path -LiteralPath "odoo.conf")) {
+    Copy-Item -LiteralPath "odoo.conf.template" -Destination "odoo.conf"
+    Write-Host "Created odoo.conf from odoo.conf.template"
+}
+
 $existingContainer = docker ps -a --filter "name=^/postgres_odoo-base-15-01$" --format "{{.Names}}"
 if ($existingContainer) {
     docker start postgres_odoo-base-15-01 | Out-Null
 } else {
     docker compose up -d postgres-odoo-base-15-01
 }
-python odoo-bin.py -c odoo.conf -d $Database --stop-after-init -u nhan_su,quan_ly_van_ban,event_meeting_room_extended,dnu_meeting_asset
+python .\odoo-bin.py -c .\odoo.conf -d $Database --stop-after-init -u nhan_su,quan_ly_van_ban,event_meeting_room_extended,dnu_meeting_asset
 
 $script = @'
 import base64
@@ -95,4 +100,4 @@ env.cr.rollback()
 print("PRODUCT_SMOKE_OK")
 '@
 
-$script | python odoo-bin.py shell -c odoo.conf -d $Database
+$script | python .\odoo-bin.py shell -c .\odoo.conf -d $Database

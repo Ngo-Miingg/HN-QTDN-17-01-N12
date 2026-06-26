@@ -2,4 +2,10 @@
 set -euo pipefail
 
 cd "$(dirname "$0")"
-/mnt/d/Work/HocKy3/Enterprise_software_integration_and_management/Business-Internship/venv/bin/python odoo-bin.py -c odoo.conf -d ttdn_n6_dev
+
+if [ ! -f "odoo.conf" ]; then
+  cp odoo.conf.template odoo.conf
+  echo "Created odoo.conf from odoo.conf.template"
+fi
+
+python3 odoo-bin.py -c odoo.conf -d "${ODOO_DB:-ttdn_n6_dev}" --http-port "${ODOO_HTTP_PORT:-8071}"
